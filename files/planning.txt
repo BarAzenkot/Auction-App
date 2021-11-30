@@ -1,0 +1,41 @@
+MODELS:
+	user - V
+		email
+		password
+		full name
+		credit card (maybe)
+		is_premium?
+		follow (maybe)
+	product - V
+		name
+		photo
+		description
+		details (if needed)
+	post / auction -
+		product
+		start date
+		end date
+		start bid
+		current bid
+		similar auctions (list)
+		comments (maybe)
+		category
+	comment - V
+		user
+		text
+		date
+	comments - ?
+		comment (list)
+	bid - V
+		user
+		post / auction
+		price
+	catrgory - V
+		title
+		description (maybe)
+	feed - V
+		post / auction (list)
+	my bids -
+		bid (list)
+	my purchases -
+		bid (list) (those who purchased)

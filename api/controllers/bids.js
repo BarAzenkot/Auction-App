@@ -1,0 +1,28 @@
+const mongoose = require("mongoose");
+const Bid = require("../models/bid");
+
+module.exports = {
+  setABid: async (req, res) => {
+    const { amount } = req.body;
+    const auctionID = req.params.auctionID;
+
+    const bid = new Bid({
+      _id: new mongoose.Types.ObjectId(),
+      amount,
+      auction: auctionID,
+    });
+    await bid.save();
+    return await bid;
+  },
+  deleteAllBids: async (req, res) => {
+    Bid.deleteMany({ amount: { $gt: 0 } })
+      .then(() => {
+        res.status(200).json({
+          message: `All bids has been deleted`,
+        });
+      })
+      .catch((err) => {
+        res.status(500).json({ err });
+      });
+  },
+};

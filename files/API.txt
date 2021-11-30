@@ -1,0 +1,10 @@
+[GET] - /auctions/ --> get a list of auctions
+[GET] - /auctions/#id --> get a specific auction
+[PATCH] - /auctions/#id --> update a specific auction
+[POST] - /auctions/ --> create a new auction
+[POST] - /auctions/#id/bid --> offer a 
+[DELETE] - /auctions/#id --> delete a specific auction
+
+[POST] - /login --> log in to the system
+
+[POST] - /sign-in --> sign in to the system
