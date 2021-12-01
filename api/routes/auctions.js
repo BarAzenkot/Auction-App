@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { deleteAllBids } = require("../controllers/bids");
 const upload = require("../middlewares/upload");
+const checkAuth = require("../middlewares/checkAuth.js");
 const {
   getAllAuctions,
   createNewAuction,
@@ -12,13 +13,13 @@ const {
   getByCategory,
 } = require("../controllers/auctions");
 
-router.get("/", getAllAuctions);
-router.post("/", upload.array("images", 8), createNewAuction);
-router.patch("/:auctionID", updateAuction);
-router.delete("/:auctionID", deleteAuction);
-router.get("/:auctionID", getOneAuction);
-router.post("/:auctionID", offerABid);
-router.get("/categories/:categoryID", getByCategory);
-router.delete("/", deleteAllBids); // for developers' comfort.
+router.get("/", checkAuth, getAllAuctions);
+router.post("/", checkAuth, upload.array("images", 8), createNewAuction);
+router.patch("/:auctionID", checkAuth, updateAuction);
+router.delete("/:auctionID", checkAuth, deleteAuction);
+router.get("/:auctionID", checkAuth, getOneAuction);
+router.post("/:auctionID", checkAuth, offerABid);
+router.get("/categories/:categoryID", checkAuth, getByCategory);
+router.delete("/", checkAuth, deleteAllBids); // for developers' comfort.
 
 module.exports = router;

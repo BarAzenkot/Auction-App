@@ -18,9 +18,7 @@ module.exports = {
       });
   },
   createNewAuction: (req, res) => {
-    console.log(req.files);
     const images = req.files.map((file) => file.path);
-    console.log(images);
 
     const { title, description, startDate, endDate, startPrice, category } =
       req.body;
