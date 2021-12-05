@@ -9,7 +9,7 @@ const auctionSchema = mongoose.Schema({
   category: { type: String, required: true, lowercase: true },
   images: [{ type: String, required: false }],
   bids: [{ type: mongoose.Schema.Types.ObjectId, required: true, ref: "Bid" }],
-  //user: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "User" },
+  user: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "User" },
 });
 
 module.exports = mongoose.model("Auction", auctionSchema);

@@ -22,6 +22,7 @@ module.exports = {
     const images = req.files.map((file) => file.path);
     const { title, description, startDate, endDate, startPrice, category } =
       req.body;
+    const userID = req.user.id;
 
     const auction = new Auction({
       _id: new mongoose.Types.ObjectId(),
@@ -32,6 +33,17 @@ module.exports = {
       startPrice,
       category,
       images,
+      user: userID,
+    });
+
+    User.findById(userID).then((user) => {
+      if (!user) {
+        return res.status(404).json({
+          message: "User not found",
+        });
+      }
+      user.auctions.push(auction);
+      user.save();
     });
 
     auction
