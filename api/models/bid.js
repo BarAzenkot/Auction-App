@@ -9,11 +9,11 @@ const bidSchema = mongoose.Schema({
     required: true,
     ref: "Auction",
   },
-  //   user: {
-  //     type: mongoose.Schema.Types.ObjectId,
-  //     required: true,
-  //     ref: "User",
-  //   },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "User",
+  },
 });
 
 module.exports = mongoose.model("Bid", bidSchema);

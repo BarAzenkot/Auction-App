@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Auction = require("../models/auction");
 const Bid = require("../models/bid");
+const User = require("../models/user");
 const { setABid } = require("./bids");
 
 module.exports = {
@@ -105,7 +106,6 @@ module.exports = {
           });
         }
         const bidID = await setABid(req, res);
-        console.log(bidID);
         Bid.findById(bidID).then((bid) => {
           auction.bids.push(bid);
           auction.save();
@@ -118,7 +118,6 @@ module.exports = {
         // });
       })
       .catch((err) => {
-        console.log("I'M HERE");
         res.status(500).json({ err });
       });
   },
