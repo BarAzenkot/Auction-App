@@ -20,7 +20,6 @@ module.exports = {
   },
   createNewAuction: (req, res) => {
     const images = req.files.map((file) => file.path);
-
     const { title, description, startDate, endDate, startPrice, category } =
       req.body;
 

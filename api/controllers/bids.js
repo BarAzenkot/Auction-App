@@ -21,11 +21,13 @@ module.exports = {
           message: "User not found",
         });
       }
+      user.bids.push(bid);
       user.save();
     });
     await bid.save();
     return await bid;
   },
+  //For developers
   deleteAllBids: async (req, res) => {
     Bid.deleteMany({ amount: { $gt: 0 } })
       .then(() => {
