@@ -78,6 +78,8 @@ module.exports = {
   },
   deleteAuction: (req, res) => {
     const auctionID = req.params.auctionID;
+    const userID = req.user.id;
+
     Auction.findById(auctionID)
       .then((auction) => {
         if (!auction) {
@@ -85,6 +87,12 @@ module.exports = {
             message: "Auction not found!",
           });
         }
+        User.findById(userID).then((user) => {
+          user.auctions = user.auctions.filter(
+            (auc) => auc.toString() !== auctionID
+          );
+          user.save();
+        });
         Auction.deleteOne({ _id: auctionID }).then(() => {
           res.status(200).json({
             message: `Auction - ${auctionID} has been deleted`,
