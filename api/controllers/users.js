@@ -63,7 +63,7 @@ module.exports = {
             },
             process.env.JWT_KEY,
             {
-              expiresIn: "1H",
+              expiresIn: "1D",
             }
           );
           return res.status(200).json({
