@@ -8,7 +8,6 @@ const checkAuth = (req, res, next) => {
       req.user = user;
       next();
     });
-    //console.log(req.user);
   } catch (err) {
     res.status(401).json({
       message: "Auth failed",

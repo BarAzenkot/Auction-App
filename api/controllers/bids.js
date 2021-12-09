@@ -39,4 +39,15 @@ module.exports = {
         res.status(500).json({ err });
       });
   },
+  getOneBid: (req, res) => {
+    const bidID = req.params.bidID;
+    console.log(bidID);
+    Bid.findById(bidID)
+      .then((bid) => {
+        res.status(200).json({ bid });
+      })
+      .catch((err) => {
+        res.status(500).json({ err });
+      });
+  },
 };

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { deleteAllBids } = require("../controllers/bids");
+const { deleteAllBids, getOneBid } = require("../controllers/bids");
 const upload = require("../middlewares/upload");
 const checkAuth = require("../middlewares/checkAuth.js");
 const {
@@ -20,6 +20,5 @@ router.delete("/:auctionID", checkAuth, deleteAuction);
 router.get("/:auctionID", checkAuth, getOneAuction);
 router.post("/:auctionID", checkAuth, offerABid);
 router.get("/categories/:categoryID", checkAuth, getByCategory);
-router.delete("/", checkAuth, deleteAllBids); // for developers' comfort.
 
 module.exports = router;

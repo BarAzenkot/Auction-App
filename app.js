@@ -18,6 +18,7 @@ mongoose.connection.on("connected", () => {
 const auctionsRoutes = require("./api/routes/auctions");
 const categoriesRoutes = require("./api/routes/categories");
 const usersRoutes = require("./api/routes/users");
+const bidsRoutes = require("./api/routes/bids");
 
 app.use(morgan("dev"));
 
@@ -46,12 +47,13 @@ app.use(
 app.use("/auctions", auctionsRoutes);
 app.use("/categories", categoriesRoutes);
 app.use("/users", usersRoutes);
+app.use("/bids", bidsRoutes);
 
-app.get("/", (req, res) => {
-  res.status(200).json({
-    message: "Hello World 2",
-  });
-});
+// app.get("/", (req, res) => {
+//   res.status(200).json({
+//     message: "Hello World 2",
+//   });
+// });
 
 app.post("/auctions", (req, res) => {
   res.status(200).json({
@@ -59,7 +61,15 @@ app.post("/auctions", (req, res) => {
   });
 });
 
+app.get("/", (req, res) => {
+  res.status(200).json({
+    body: req.body,
+  });
+});
+
 app.use((req, res, next) => {
+  console.log("herereeeeeee");
+
   const error = new Error("Not Found!");
   error.status = 404;
   next(error);
