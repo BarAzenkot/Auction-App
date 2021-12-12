@@ -78,4 +78,17 @@ module.exports = {
       });
     });
   },
+  getOneUser: (req, res) => {
+    const userID = req.params.userID;
+
+    User.findById(userID)
+      .then((user) => {
+        res.status(200).json({
+          user,
+        });
+      })
+      .catch((err) => {
+        res.status(500).json({ err });
+      });
+  },
 };
