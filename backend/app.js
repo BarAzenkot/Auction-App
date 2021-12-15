@@ -2,6 +2,13 @@ const express = require("express");
 const app = express();
 const morgan = require("morgan");
 const mongoose = require("mongoose");
+const upload = require("./api/middlewares/upload");
+const path = require("path");
+const { GridFsStorage } = require("multer-gridfs-storage");
+const GridFSBucket = require("gridfs-stream");
+const crypto = require("crypto");
+// var cors = require("cors");
+// app.use(cors());
 
 mongoose.connect(
   `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@auctions-app.hdluf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`,
@@ -11,8 +18,13 @@ mongoose.connect(
   }
 );
 
-mongoose.connection.on("connected", () => {
-  console.log("MongoDB Connected.");
+const mongoURI = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@auctions-app.hdluf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+const conn = mongoose.createConnection(mongoURI);
+
+let gfs;
+conn.once("open", () => {
+  gfs = GridFSBucket(conn.db, mongoose.mongo);
+  gfs.collection("uploads");
 });
 
 const auctionsRoutes = require("./api/routes/auctions");
@@ -49,6 +61,31 @@ app.use("/categories", categoriesRoutes);
 app.use("/users", usersRoutes);
 app.use("/bids", bidsRoutes);
 
+app.get("/files", (req, res) => {
+  gfs.files.find().toArray((err, files) => {
+    if (!files || files.length === 0) {
+      res.status(404).json({ err: "No files." });
+    }
+    return res.json(files);
+  });
+});
+
+app.get("/image/:filename", (req, res) => {
+  gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
+    if (!file) {
+      return res.status(404).json({ err: "No file." });
+    }
+    // return res.json(file);
+
+    if (file.contentType === "image/jpeg" || file.contentType === "img/png") {
+      const readStream = gfs.createReadStream(file.filename);
+      readStream.pipe(res);
+    } else {
+      res.status(500).json({ err: "Not an image." });
+    }
+  });
+});
+
 // app.get("/", (req, res) => {
 //   res.status(200).json({
 //     message: "Hello World 2",
@@ -66,6 +103,8 @@ app.get("/", (req, res) => {
     body: req.body,
   });
 });
+
+// app.get("/files", (req, res) => {});
 
 app.use((req, res, next) => {
   console.log("herereeeeeee");

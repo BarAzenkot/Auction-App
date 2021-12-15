@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import AuthInput from "../components/AuthInput";
 import Btn from "../components/Btn";
+const axios = require("axios");
 
-const Bid = () => {
+const Bid = (props) => {
   const [amount, setAmount] = useState();
 
   const [action, setAuction] = useState({
@@ -37,10 +38,42 @@ const Bid = () => {
     console.log(amount);
   };
 
+  var config = {
+    method: "post",
+    url: `192.168.250.1:8000/auctions/${props.bid.auction}`,
+    "Content-Type": "application/json",
+    amount,
+  };
+  const makeABid = async () => {
+    await axios(config)
+      .then((response) => {
+        console.log(amount + "moshe");
+      })
+      .catch((err) => {
+        console.log(amount + "bar");
+      });
+  };
+  // console.log(props.bid.auction);
+  // const makeABid = async () => {
+  //   console.log(amount + "barrrrrrrrrrrrrrr");
+  //   const result = await axios
+  //     .post(`http://192.168.250.1:8000/auctions/${props.bid.auction}`, {
+  //       amount: amount,
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     })
+  //     .then((response) => {
+  //       console.log(JSON.stringify(response.data));
+  //     })
+  //     .catch((err) => {
+  //       console.log(err.response.data);
+  //     });
+  // };
+  // console.log(props.bid.amount);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.secondaryTitle}>Current Bid</Text>
-      <Text>{bid.amount}</Text>
       <Text style={styles.secondaryTitle}>Enter your bid</Text>
       <AuthInput
         placeholder="Amount"
@@ -48,12 +81,12 @@ const Bid = () => {
         onChangeText={(input) => setAmount(input)}
       />
       {amount ? (
-        amount <= bid.amount ? (
+        amount <= bid.amount || amount <= props.bid.amount ? (
           <Text style={styles.warning}>
             Please enter amount greater than the current bid
           </Text>
         ) : (
-          <Btn onPress={onPressHandler} title="Submit" />
+          <Btn onPress={makeABid} title="Submit" />
         )
       ) : (
         <Text />
@@ -66,7 +99,7 @@ const styles = StyleSheet.create({
   container: {
     marginLeft: 40,
     marginRight: 40,
-    marginTop: 100,
+    marginTop: 40,
   },
   title: {
     fontWeight: "bold",

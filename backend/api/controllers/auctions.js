@@ -18,8 +18,9 @@ module.exports = {
         });
       });
   },
-  createNewAuction: (req, res) => {
-    const images = req.files.map((file) => file.path);
+  createNewAuction: async (req, res) => {
+    // res.json({ file: req.files });
+    const images = req.files.map((file) => file.filename);
     const { title, description, startDate, endDate, startPrice, category } =
       req.body;
     const userID = req.user.id;
@@ -132,11 +133,9 @@ module.exports = {
             .status(200)
             .json({ message: `a new offer for auction - ${auctionID}` });
         });
-        // .catch((err) => {
-        //   res.status(500).json({ err });
-        // });
       })
       .catch((err) => {
+        console.log("WTFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
         res.status(500).json({ err });
       });
   },
@@ -146,6 +145,17 @@ module.exports = {
       .then((auctions) => {
         res.status(200).json({
           auctions,
+        });
+      })
+      .catch((err) => {
+        res.status(500).json({ err });
+      });
+  },
+  deleteAllAuctions: (req, res) => {
+    Auction.deleteMany({ title: { $ne: "" } })
+      .then(() => {
+        res.status(200).json({
+          message: `All auctions has been deleted`,
         });
       })
       .catch((err) => {

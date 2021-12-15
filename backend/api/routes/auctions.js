@@ -11,14 +11,16 @@ const {
   getOneAuction,
   offerABid,
   getByCategory,
+  deleteAllAuctions,
 } = require("../controllers/auctions");
 
-router.get("/", checkAuth, getAllAuctions);
+router.get("/", /*checkAuth,*/ getAllAuctions);
 router.post("/", checkAuth, upload.array("images", 8), createNewAuction);
 router.patch("/:auctionID", checkAuth, updateAuction);
 router.delete("/:auctionID", checkAuth, deleteAuction);
-router.get("/:auctionID", checkAuth, getOneAuction);
-router.post("/:auctionID", checkAuth, offerABid);
+router.get("/:auctionID", /*checkAuth,*/ getOneAuction);
+router.post("/:auctionID", /*checkAuth,*/ offerABid);
 router.get("/categories/:categoryID", checkAuth, getByCategory);
+router.delete("/", deleteAllAuctions);
 
 module.exports = router;
