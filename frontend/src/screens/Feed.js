@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView, StyleSheet } from "react-native";
 import FeedItem from "../components/FeedItem";
 import axios from "axios";
-const baseUrl = "http://192.168.0.84:8000";
+const baseUrl = "http://172.20.8.235:8000";
 
 const Feed = (props) => {
   // const [feedItems, setFeedItems] = useState([

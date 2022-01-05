@@ -6,6 +6,7 @@ const { setABid } = require("./bids");
 
 module.exports = {
   getAllAuctions: (req, res) => {
+    console.log(req.user);
     Auction.find()
       .then((auctions) => {
         res.status(200).json({

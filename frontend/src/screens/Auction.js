@@ -4,14 +4,18 @@ import Slideshow from "react-native-image-slider-show";
 import Btn from "../components/Btn";
 import Bid from "../components/Bid";
 const axios = require("axios");
-const baseUrl = "http://192.168.0.84:8000";
+const baseUrl = "http://172.20.8.235:8000";
 
 const Auction = (props) => {
   const [offerBid, setOfferBid] = useState(false);
   const onPressHandler = () => {
     setOfferBid(!offerBid);
   };
-  const [amount, onChangeAmount] = useState(null);
+
+  const onChangeBidHandler = (amount) => {
+    setBid({ ...bid, amount });
+  };
+
   const [load, setLoad] = useState(false);
   const viewRef = useRef();
   const isInitialMount = useRef(true);
@@ -56,6 +60,8 @@ const Auction = (props) => {
     } else {
       const callApi2 = async () => {
         const bidID = auction.bids ? auction.bids.pop() : null;
+        console.log(auction);
+        console.log(`${baseUrl}/bids/${bidID}`);
         if (bidID) {
           const result = axios
             .get(`${baseUrl}/bids/${bidID}`)
@@ -63,7 +69,7 @@ const Auction = (props) => {
               setBid(response.data.bid);
             })
             .catch((error) => {
-              res.status(500).json({ err });
+              console.log(error);
             });
         }
       };
@@ -95,7 +101,7 @@ const Auction = (props) => {
               // console.log(urls);
             })
             .catch((error) => {
-              res.status(500).json({ err });
+              response.status(500).json({ err });
               // setLoad(true);
             });
         });
@@ -103,14 +109,17 @@ const Auction = (props) => {
       };
       callApi2().then(() => {
         callApi3().then(() => {
-          callApi4().then(() => setLoad(true));
+          callApi4().then(() => {
+            setLoad(true);
+          });
         });
       });
+
       // callApi2();
       // callApi3();
       // callApi4();
     }
-  }, []);
+  }, [auction]);
 
   // useEffect(() => {
   //   const callApi = async () => {
@@ -176,7 +185,7 @@ const Auction = (props) => {
         <Text>{bid.amount}</Text>
         {offerBid ? (
           <View>
-            <Bid bid={bid} />
+            <Bid bid={bid} auction={auction} onChangeBid={onChangeBidHandler} />
             <Btn onPress={onPressHandler} title="Close" />
           </View>
         ) : (

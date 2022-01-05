@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import axios from "axios";
 import Btn from "../components/Btn";
-const baseUrl = "http://192.168.0.84:8000";
+const baseUrl = "http://172.20.8.235:8000";
 
 const FeedItem = (props) => {
   const [Item, setItem] = useState({});
@@ -45,7 +45,7 @@ const FeedItem = (props) => {
           })
           .catch((error) => {
             setLoad(true);
-            res.status(500).json({ err });
+            response.status(500).json({ err });
           });
       }
     };

@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "async-storage": "^0.1.0",
     "axios": "^0.24.0",
     "dotenv": "^10.0.0",
     "react-native-dotenv": "^3.3.1"

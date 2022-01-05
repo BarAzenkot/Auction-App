@@ -3,36 +3,11 @@ import { View, Text, StyleSheet } from "react-native";
 import AuthInput from "../components/AuthInput";
 import Btn from "../components/Btn";
 const axios = require("axios");
+const baseUrl = "http://172.20.8.235:8000";
 
 const Bid = (props) => {
   const [amount, setAmount] = useState();
-
-  const [action, setAuction] = useState({
-    _id: "61ae05fee96bf1cc6a8cb982",
-    title: "2 Pokemon Cards",
-    description:
-      "2 pokemon cards, first one is Mewtwo and second one is Pidgeot",
-    startDate: "2022-01-01T00:00:00.000Z",
-    endDate: "2022-02-01T00:00:00.000Z",
-    startPrice: 100,
-    category: "collections",
-    images: [
-      require("../../uploads/1638794750924-mewtwo.jpg"),
-      require("../../uploads/1638794750924-peugeot.jpg"),
-    ],
-    bids: ["61b1ef9e18bcda6f0bfbd8b2"],
-    user: "61a758db1105dfeed51745c4",
-    __v: 0,
-  });
-
-  const [bid, setBid] = useState({
-    _id: "61b1f6146847cf164c58d12d",
-    amount: 150,
-    auction: "61ae05fee96bf1cc6a8cb982",
-    user: "61b1cf8100aa7b5484a9f152",
-    date: "2021-12-09T12:27:00.546Z",
-    __v: 0,
-  });
+  const [bid, setBid] = useState({});
 
   const onPressHandler = () => {
     console.log(amount);
@@ -40,17 +15,34 @@ const Bid = (props) => {
 
   var config = {
     method: "post",
-    url: `${process.env.BASE_URL}/auctions/${props.bid.auction}`,
-    "Content-Type": "application/json",
-    amount,
+    url: `${baseUrl}/auctions/${props.auction._id}`,
+    headers: {
+      Authorization:
+        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZDE2ODJjMTNlMDEzN2M3YTEwY2FlZCIsImVtYWlsIjoiYmExMTExMXJAZ21haWwuY29tIiwiaWF0IjoxNjQxMzg0MzM0LCJleHAiOjE2NDE0NzA3MzR9.4wsa8iwg5AJThqSKYwioH5ZLSsB7VBv5kcR2Bf0DMWA",
+      "Content-Type": "application/json",
+    },
+    data: amount,
   };
-  const makeABid = async () => {
-    await axios(config)
-      .then((response) => {
-        console.log(amount + "moshe");
+
+  const makeABid = () => {
+    axios
+      .post(
+        `${baseUrl}/auctions/${props.auction._id}`,
+        {
+          amount,
+        },
+        {
+          headers: {
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZDE2ODJjMTNlMDEzN2M3YTEwY2FlZCIsImVtYWlsIjoiYmExMTExMXJAZ21haWwuY29tIiwiaWF0IjoxNjQxMzg0MzM0LCJleHAiOjE2NDE0NzA3MzR9.4wsa8iwg5AJThqSKYwioH5ZLSsB7VBv5kcR2Bf0DMWA`,
+          },
+        }
+      )
+      .then((res) => {
+        props.onChangeBid(amount);
+        setAmount("");
       })
       .catch((err) => {
-        res.status(500).json({ err });
+        console.log(err);
       });
   };
   // console.log(props.bid.auction);
@@ -70,26 +62,34 @@ const Bid = (props) => {
   //       console.log(err.response.data);
   //     });
   // };
-  // console.log(props.bid.amount);
 
   return (
     <View style={styles.container}>
       <Text style={styles.secondaryTitle}>Enter your bid</Text>
       <AuthInput
         placeholder="Amount"
+        value={amount}
         keyboardType="number-pad"
         onChangeText={(input) => setAmount(input)}
       />
       {amount ? (
-        amount <= bid.amount || amount <= props.bid.amount ? (
+        props.bid.amount ? (
+          amount <= props.bid.amount ? (
+            <Text style={styles.warning}>
+              Please enter amount greater than the current bid.
+            </Text>
+          ) : (
+            <Btn onPress={makeABid} title="Submit" />
+          )
+        ) : amount <= props.auction.startPrice ? (
           <Text style={styles.warning}>
-            Please enter amount greater than the current bid
+            Please enter amount greater than the start price.
           </Text>
         ) : (
           <Btn onPress={makeABid} title="Submit" />
         )
       ) : (
-        <Text />
+        <Text>{amount}</Text>
       )}
     </View>
   );

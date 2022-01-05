@@ -7,7 +7,6 @@ module.exports = {
     const { amount } = req.body;
     const auctionID = req.params.auctionID;
     const userID = req.user.id;
-
     const bid = new Bid({
       _id: new mongoose.Types.ObjectId(),
       amount,
