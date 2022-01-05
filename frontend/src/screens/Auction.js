@@ -4,6 +4,7 @@ import Slideshow from "react-native-image-slider-show";
 import Btn from "../components/Btn";
 import Bid from "../components/Bid";
 const axios = require("axios");
+const baseUrl = "http://192.168.0.84:8000";
 
 const Auction = (props) => {
   const [offerBid, setOfferBid] = useState(false);
@@ -22,7 +23,7 @@ const Auction = (props) => {
 
   var config = {
     method: "get",
-    url: "localhost:8000/auctions/619cf29764797d624f5eb8e5",
+    url: `${baseUrl}/auctions/619cf29764797d624f5eb8e5`,
     headers: {
       Authorization:
         "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxYjFjZjgxMDBhYTdiNTQ4NGE5ZjE1MiIsImVtYWlsIjoiYmFyQGdtYWlsLmNvbSIsImlhdCI6MTYzOTQxMzI1OCwiZXhwIjoxNjM5NDk5NjU4fQ.d-GmSYzsB0-ZC8cehgIicKAwy7RBj5nI7F4OUODahDQ",
@@ -31,7 +32,7 @@ const Auction = (props) => {
 
   var config = {
     method: "get",
-    url: "localhost:8000/bids/61b89cd82eb8822d1798d122",
+    url: `${baseUrl}/bids/61b89cd82eb8822d1798d122`,
     headers: {
       Authorization:
         "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxYjFjZjgxMDBhYTdiNTQ4NGE5ZjE1MiIsImVtYWlsIjoiYmFyQGdtYWlsLmNvbSIsImlhdCI6MTYzOTQ4NjE3MiwiZXhwIjoxNjM5NTcyNTcyfQ.tfqt70pBdD2D1kO4LrkKNm2tevEwgiCNS803r64yopc",
@@ -39,11 +40,10 @@ const Auction = (props) => {
   };
 
   useEffect(() => {
-    const callApi1 = async () => {
+    const callApi1 = () => {
       const result = axios
-        .get(`http://192.168.250.1:8000/auctions/${props.route.params.id}`)
+        .get(`${baseUrl}/auctions/${props.route.params.id}`)
         .then((response) => {
-          // console.log(JSON.stringify(response.data.auction));
           setAuction(response.data.auction);
         });
     };
@@ -58,24 +58,30 @@ const Auction = (props) => {
         const bidID = auction.bids ? auction.bids.pop() : null;
         if (bidID) {
           const result = axios
-            .get(`http://192.168.250.1:8000/bids/${bidID}`)
+            .get(`${baseUrl}/bids/${bidID}`)
             .then((response) => {
               setBid(response.data.bid);
+            })
+            .catch((error) => {
+              res.status(500).json({ err });
             });
         }
       };
       const callApi3 = async () => {
         const sellerID = auction.user;
         const result = axios
-          .get(`http://192.168.250.1:8000/users/${sellerID}`)
+          .get(`${baseUrl}/users/${sellerID}`)
           .then((response) => {
             setSeller(response.data.user);
+          })
+          .catch((error) => {
+            res.status(500).json({ err });
           });
       };
       const callApi4 = async () => {
         auction.images?.map((image) => {
           let result = axios
-            .get(`http://192.168.250.1:8000/image/${image}`)
+            .get(`${baseUrl}/image/${image}`)
             .then((response) => {
               // setImg({ uri: response.config.url });
               // setLoad(true);
@@ -86,9 +92,10 @@ const Auction = (props) => {
               // setUrls([...urls, { url: response.config.url }]);
               // setLoad(true);
 
-              console.log(urls);
+              // console.log(urls);
             })
             .catch((error) => {
+              res.status(500).json({ err });
               // setLoad(true);
             });
         });
@@ -101,15 +108,15 @@ const Auction = (props) => {
       });
       // callApi2();
       // callApi3();
-      // callApi4().then(() => setLoad(true));
+      // callApi4();
     }
-  }, [auction]);
+  }, []);
 
   // useEffect(() => {
-  //   const callApi4 = async () => {
+  //   const callApi = async () => {
   //     auction.images?.map((image) => {
   //       let result = axios
-  //         .get(`http://192.168.250.1:8000/image/${image}`)
+  //         .get(`${process.env.BASE_URL}/image/${image}`)
   //         .then((response) => {
   //           // setImg({ uri: response.config.url });
   //           // setLoad(true);
@@ -123,6 +130,7 @@ const Auction = (props) => {
   //           console.log(urls);
   //         })
   //         .catch((error) => {
+  //           console.log({ error });
   //           // setLoad(true);
   //         });
   //     });

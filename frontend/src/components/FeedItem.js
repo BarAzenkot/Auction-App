@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import axios from "axios";
 import Btn from "../components/Btn";
-const baseUrl = "https://192.168.250.1:8000";
+const baseUrl = "http://192.168.0.84:8000";
 
 const FeedItem = (props) => {
   const [Item, setItem] = useState({});
@@ -14,41 +14,45 @@ const FeedItem = (props) => {
     });
   };
 
-  const fetchUser = () => {
-    var data = "";
+  // const fetchUser = () => {
+  //   var data = "";
 
-    const config = {
-      method: "get",
-      url: `localhost:8000/auctions/${props.id}`,
-      headers: {
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxYjFjZjgxMDBhYTdiNTQ4NGE5ZjE1MiIsImVtYWlsIjoiYmFyQGdtYWlsLmNvbSIsImlhdCI6MTYzOTQxMzI1OCwiZXhwIjoxNjM5NDk5NjU4fQ.d-GmSYzsB0-ZC8cehgIicKAwy7RBj5nI7F4OUODahDQ",
-      },
-    };
+  //   const config = {
+  //     method: "get",
+  //     url: `${process.env.BASE_URL}/auctions/${props.id}`,
+  //     headers: {
+  //       Authorization:
+  //         "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxYjFjZjgxMDBhYTdiNTQ4NGE5ZjE1MiIsImVtYWlsIjoiYmFyQGdtYWlsLmNvbSIsImlhdCI6MTYzOTQxMzI1OCwiZXhwIjoxNjM5NDk5NjU4fQ.d-GmSYzsB0-ZC8cehgIicKAwy7RBj5nI7F4OUODahDQ",
+  //     },
+  //   };
 
-    axios(config)
-      .then((response) => {
-        // console.log(JSON.stringify(response.data));
-      })
-      .catch((error) => {});
-  };
+  //   axios(config)
+  //     .then((response) => {
+  //       // console.log(JSON.stringify(response.data));
+  //     })
+  //     .catch((error) => {
+  //       res.status(500).json({ err });
+  //     });
+  // };
   useEffect(() => {
-    const callApi = async () => {
+    const callApi = () => {
       if (props.image) {
-        console.log(props.image);
         const result = axios
-          .get(`http://192.168.250.1:8000/image/${props.image}`)
+          .get(`${baseUrl}/image/${props.image}`)
           .then((response) => {
             setImg({ uri: response.config.url });
             setLoad(true);
           })
           .catch((error) => {
             setLoad(true);
+            res.status(500).json({ err });
           });
       }
     };
+
     callApi();
   }, []);
+  // console.log(Item);
   // console.log(props.image);
   // console.log();
 

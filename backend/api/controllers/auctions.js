@@ -135,7 +135,6 @@ module.exports = {
         });
       })
       .catch((err) => {
-        console.log("WTFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
         res.status(500).json({ err });
       });
   },

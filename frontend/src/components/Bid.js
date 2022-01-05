@@ -40,7 +40,7 @@ const Bid = (props) => {
 
   var config = {
     method: "post",
-    url: `192.168.250.1:8000/auctions/${props.bid.auction}`,
+    url: `${process.env.BASE_URL}/auctions/${props.bid.auction}`,
     "Content-Type": "application/json",
     amount,
   };
@@ -50,14 +50,14 @@ const Bid = (props) => {
         console.log(amount + "moshe");
       })
       .catch((err) => {
-        console.log(amount + "bar");
+        res.status(500).json({ err });
       });
   };
   // console.log(props.bid.auction);
   // const makeABid = async () => {
   //   console.log(amount + "barrrrrrrrrrrrrrr");
   //   const result = await axios
-  //     .post(`http://192.168.250.1:8000/auctions/${props.bid.auction}`, {
+  //     .post(`${process.env.BASE_URL/auctions/${props.bid.auction}`, {
   //       amount: amount,
   //       headers: {
   //         "Content-Type": "application/json",

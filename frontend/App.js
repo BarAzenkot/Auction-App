@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import Auction from "./src/screens/Auction";
 import Feed from "./src/screens/Feed";
 import LoginScreen from "./src/screens/LoginScreen";
-import BidScreen from "./src/screens/BidScreen";
+import Bid from "./src/components/Bid";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 
@@ -15,14 +15,8 @@ export default function App() {
       <AppStack.Navigator initialRouteName="Feed">
         <AppStack.Screen name="Feed" component={Feed} />
         <AppStack.Screen name="Auction" component={Auction} />
-        <AppStack.Screen name="BidScreen" component={BidScreen} />
+        <AppStack.Screen name="Bid" component={Bid} />
       </AppStack.Navigator>
-      {/* <View style={styles.container}> */}
-      {/* <LoginScreen /> */}
-      {/* <Feed /> */}
-      {/* <Auction /> */}
-      {/* <BidScreen /> */}
-      {/* </View> */}
     </NavigationContainer>
   );
 }

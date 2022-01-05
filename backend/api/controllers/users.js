@@ -33,8 +33,8 @@ module.exports = {
               message: "User created successfully",
             });
           })
-          .catch((error) => {
-            res.status(500).json({ error });
+          .catch((err) => {
+            res.status(500).json({ err });
           });
       });
     });

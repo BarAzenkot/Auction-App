@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView, StyleSheet } from "react-native";
 import FeedItem from "../components/FeedItem";
 import axios from "axios";
+const baseUrl = "http://192.168.0.84:8000";
 
 const Feed = (props) => {
   // const [feedItems, setFeedItems] = useState([
@@ -80,46 +81,62 @@ const Feed = (props) => {
   const onPressHandler = (input) => {
     props.navigation.navigate("Auction", input);
   };
+  // const config = {
+  //   method: "get",
+  //   url: `${baseUrl}/auctions`,
+  //   // headers: {
+  //   //   Authorization:
+  //   //     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxYjFjZjgxMDBhYTdiNTQ4NGE5ZjE1MiIsImVtYWlsIjoiYmFyQGdtYWlsLmNvbSIsImlhdCI6MTYzOTMyMjU2NCwiZXhwIjoxNjM5NDA4OTY0fQ.EERb7SwB1abgeJA9ThL3MIcCZInD5lcXZ8nG-kUsj4c",
+  //   // },
+  // };
+  // const result = axios(config)
+  //   .then((response) => {
+  //     console.log("herererere");
+  //     console.log(response);
+  //     // setFeedItems(response.data.auctions);
+  //   })
+  //   .catch(function (error) {
+  //     console.log(error);
+  //   });
 
-  const config = {
-    method: "get",
-    url: "http://192.168.250.1:8000/auctions",
-    headers: {
-      Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxYjFjZjgxMDBhYTdiNTQ4NGE5ZjE1MiIsImVtYWlsIjoiYmFyQGdtYWlsLmNvbSIsImlhdCI6MTYzOTMyMjU2NCwiZXhwIjoxNjM5NDA4OTY0fQ.EERb7SwB1abgeJA9ThL3MIcCZInD5lcXZ8nG-kUsj4c",
-    },
-  };
-  axios(config)
-    .then(function (response) {
-      // console.log(JSON.stringify(response.data.auctions));
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+  // axios.get(`${baseUrl}/auctions`).then((response) => {
+  //   console.log(res.data);
+  // });
+
+  // var config = {
+  //   method: "get",
+  //   url: "192.168.250.1:8000/auctions",
+  //   headers: {},
+  // };
+
+  // axios(config)
+  //   .then(function (response) {
+  //     console.log(JSON.stringify(response.data));
+  //   })
+  //   .catch(function (error) {
+  //     console.log(error);
+  //   });
 
   useEffect(() => {
-    const callApi = async () => {
-      const result = await axios
-        .get("http://192.168.250.1:8000/auctions")
-        .then((response) => {
-          setFeedItems(response.data.auctions);
-        });
+    const callApi = () => {
+      const result = axios
+        .get(`${baseUrl}/auctions/`)
+        .then((response) => setFeedItems(response.data.auctions));
     };
-
     callApi();
-  }, []);
+  }, [`${baseUrl}/auctions`]);
 
   return (
     <ScrollView style={styles.container}>
       <View>
-        {feedItems?.map((feed) => (
+        {feedItems?.map((item) => (
           <FeedItem
             onPress={onPressHandler}
-            id={feed._id}
-            key={feed._id}
-            title={feed.title}
-            description={feed.description}
-            image={feed.images[0] ? feed.images[0] : null}
+            id={item._id}
+            key={item._id}
+            title={item.title}
+            description={item.description}
+            image={item.images[0] ? item.images[0] : null}
           />
         ))}
       </View>
