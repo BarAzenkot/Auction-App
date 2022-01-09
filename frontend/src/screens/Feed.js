@@ -37,7 +37,6 @@ const Feed = (props) => {
     };
     callApi();
   }, [`${baseUrl}/auctions`]);
-  console.log(feedItems);
 
   return (
     <ScrollView style={styles.container}>

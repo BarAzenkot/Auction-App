@@ -1,22 +1,16 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  Keyboard,
-  TouchableOpacity,
-} from "react-native";
 import AuthInput from "../components/AuthInput";
 import { windowWidth, windowHeight } from "../../Dimensions";
 import Btn from "../components/Btn";
 import axios from "axios";
-import { storeToken } from "../../AsyncStorageHandles";
+import { View, StyleSheet, Keyboard } from "react-native";
 const baseUrl = "http://172.20.8.235:8000";
 
-const LoginScreen = (props) => {
+const RegisterScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [fullName, setFullName] = useState("");
   const [keyboard, setKeyboard] = useState(false);
 
   useEffect(() => {
@@ -35,13 +29,15 @@ const LoginScreen = (props) => {
 
   const onPressHandler = () => {
     var data = {
-      email: email,
+      username: username,
       password: password,
+      email: email,
+      fullName: fullName,
     };
 
     var config = {
       method: "post",
-      url: `${baseUrl}/users/login`,
+      url: `${baseUrl}/users/signup`,
       headers: {
         "Content-Type": "application/json",
       },
@@ -50,24 +46,18 @@ const LoginScreen = (props) => {
 
     axios(config)
       .then(function (response) {
-        storeToken(response.data.token).then(() => {
-          props.reReadToken();
-        });
+        console.log(JSON.stringify(response.data));
       })
       .catch(function (error) {
-        console.log(error.message);
+        console.log(error);
       });
-  };
-
-  const unsigned = () => {
-    console.log("nothing");
   };
 
   return (
     <View style={styles.wrapper}>
       <View
         style={{
-          marginTop: keyboard ? windowHeight * 0.28 : windowHeight * 0.4,
+          marginTop: keyboard ? windowHeight * 0.2 : windowHeight * 0.3,
           backgroundColor: "grey",
           borderWidth: 1,
           borderRadius: 10,
@@ -87,40 +77,26 @@ const LoginScreen = (props) => {
           returnKeyType="done"
           onChangeText={(input) => setPassword(input)}
         />
-        <Btn onPress={onPressHandler} title="Login" />
+        <AuthInput
+          placeholder="Username"
+          returnKeyType="done"
+          onChangeText={(input) => setUsername(input)}
+        />
+        <AuthInput
+          placeholder="Full Name"
+          returnKeyType="done"
+          onChangeText={(input) => setFullName(input)}
+        />
+        <Btn title="Register" onPress={onPressHandler} />
       </View>
-      <Text style={styles.text}>Do not have an account?</Text>
-      <TouchableOpacity onPress={unsigned}>
-        <Text style={styles.unsigned}>Click Here</Text>
-      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    marginTop: windowHeight * 0.4,
-    backgroundColor: "grey",
-    borderWidth: 1,
-    borderRadius: 10,
-    padding: 10,
-    width: windowWidth * 0.8,
-  },
   wrapper: {
-    textAlign: "center",
     alignItems: "center",
-  },
-  unsigned: {
-    fontWeight: "bold",
-    fontSize: 18,
-    marginTop: 5,
-    color: "navy",
-  },
-  text: {
-    color: "grey",
-    marginTop: 20,
-    fontSize: 18,
   },
 });
 
-export default LoginScreen;
+export default RegisterScreen;

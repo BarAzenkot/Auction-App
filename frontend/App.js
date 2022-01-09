@@ -4,6 +4,7 @@ import Auction from "./src/screens/Auction";
 import Feed from "./src/screens/Feed";
 import LoginScreen from "./src/screens/LoginScreen";
 import Bid from "./src/components/Bid";
+import RegisterScreen from "./src/screens/RegisterScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { getToken } from "./AsyncStorageHandles";
@@ -41,6 +42,7 @@ export default function App() {
     );
   }
   return <LoginScreen reReadToken={reReadToken} />;
+  // return <RegisterScreen />;
 }
 
 const styles = StyleSheet.create({
