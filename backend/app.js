@@ -107,8 +107,6 @@ app.get("/", (req, res) => {
 // app.get("/files", (req, res) => {});
 
 app.use((req, res, next) => {
-  console.log("herereeeeeee");
-
   const error = new Error("Not Found!");
   error.status = 404;
   next(error);

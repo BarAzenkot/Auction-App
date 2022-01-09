@@ -4,10 +4,14 @@ import AuthInput from "../components/AuthInput";
 import Btn from "../components/Btn";
 const axios = require("axios");
 const baseUrl = "http://172.20.8.235:8000";
+import { getToken } from "../../AsyncStorageHandles";
 
 const Bid = (props) => {
   const [amount, setAmount] = useState();
   const [bid, setBid] = useState({});
+  const tokenize = async () => {
+    return await getToken();
+  };
 
   const onPressHandler = () => {
     console.log(amount);
@@ -25,25 +29,27 @@ const Bid = (props) => {
   };
 
   const makeABid = () => {
-    axios
-      .post(
-        `${baseUrl}/auctions/${props.auction._id}`,
-        {
-          amount,
-        },
-        {
-          headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZDE2ODJjMTNlMDEzN2M3YTEwY2FlZCIsImVtYWlsIjoiYmExMTExMXJAZ21haWwuY29tIiwiaWF0IjoxNjQxMzg0MzM0LCJleHAiOjE2NDE0NzA3MzR9.4wsa8iwg5AJThqSKYwioH5ZLSsB7VBv5kcR2Bf0DMWA`,
+    tokenize().then((token) => {
+      axios
+        .post(
+          `${baseUrl}/auctions/${props.auction._id}`,
+          {
+            amount,
           },
-        }
-      )
-      .then((res) => {
-        props.onChangeBid(amount);
-        setAmount("");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((res) => {
+          props.onChangeBid(amount);
+          setAmount("");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    });
   };
   // console.log(props.bid.auction);
   // const makeABid = async () => {
@@ -70,6 +76,7 @@ const Bid = (props) => {
         placeholder="Amount"
         value={amount}
         keyboardType="number-pad"
+        returnKeyType="done"
         onChangeText={(input) => setAmount(input)}
       />
       {amount ? (

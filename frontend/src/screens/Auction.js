@@ -1,13 +1,30 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Keyboard } from "react-native";
 import Slideshow from "react-native-image-slider-show";
 import Btn from "../components/Btn";
 import Bid from "../components/Bid";
+import { windowWidth, windowHeight } from "../../Dimensions";
 const axios = require("axios");
 const baseUrl = "http://172.20.8.235:8000";
 
 const Auction = (props) => {
   const [offerBid, setOfferBid] = useState(false);
+  const [keyboard, setKeyboard] = useState(false);
+
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
+      setKeyboard(true);
+    });
+    const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+      setKeyboard(false);
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
+
   const onPressHandler = () => {
     setOfferBid(!offerBid);
   };
@@ -24,24 +41,6 @@ const Auction = (props) => {
   const [bid, setBid] = useState({});
   const [seller, setSeller] = useState({});
   const [urls, setUrls] = useState([]);
-
-  var config = {
-    method: "get",
-    url: `${baseUrl}/auctions/619cf29764797d624f5eb8e5`,
-    headers: {
-      Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxYjFjZjgxMDBhYTdiNTQ4NGE5ZjE1MiIsImVtYWlsIjoiYmFyQGdtYWlsLmNvbSIsImlhdCI6MTYzOTQxMzI1OCwiZXhwIjoxNjM5NDk5NjU4fQ.d-GmSYzsB0-ZC8cehgIicKAwy7RBj5nI7F4OUODahDQ",
-    },
-  };
-
-  var config = {
-    method: "get",
-    url: `${baseUrl}/bids/61b89cd82eb8822d1798d122`,
-    headers: {
-      Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxYjFjZjgxMDBhYTdiNTQ4NGE5ZjE1MiIsImVtYWlsIjoiYmFyQGdtYWlsLmNvbSIsImlhdCI6MTYzOTQ4NjE3MiwiZXhwIjoxNjM5NTcyNTcyfQ.tfqt70pBdD2D1kO4LrkKNm2tevEwgiCNS803r64yopc",
-    },
-  };
 
   useEffect(() => {
     const callApi1 = () => {
@@ -60,8 +59,6 @@ const Auction = (props) => {
     } else {
       const callApi2 = async () => {
         const bidID = auction.bids ? auction.bids.pop() : null;
-        console.log(auction);
-        console.log(`${baseUrl}/bids/${bidID}`);
         if (bidID) {
           const result = axios
             .get(`${baseUrl}/bids/${bidID}`)
@@ -89,23 +86,27 @@ const Auction = (props) => {
           let result = axios
             .get(`${baseUrl}/image/${image}`)
             .then((response) => {
-              // setImg({ uri: response.config.url });
-              // setLoad(true);
-              // urls.push({ uri: response.config.url });
-              const url = urls;
-              url.push({ url: response.config.url });
-              setUrls(url);
-              // setUrls([...urls, { url: response.config.url }]);
-              // setLoad(true);
-
-              // console.log(urls);
+              // const url = urls;
+              // url.push({ url: response.config.url });
+              // setUrls([...new Set(url)]);
+              setUrls((lastState) => {
+                let alreadyIn = false;
+                let urlsArr = lastState;
+                lastState.forEach((url) => {
+                  if (url.url === response.config.url) {
+                    alreadyIn = true;
+                  }
+                });
+                if (!alreadyIn) {
+                  urlsArr.push({ url: response.config.url });
+                }
+                return urlsArr;
+              });
             })
             .catch((error) => {
               response.status(500).json({ err });
-              // setLoad(true);
             });
         });
-        // console.log(result);
       };
       callApi2().then(() => {
         callApi3().then(() => {
@@ -114,42 +115,8 @@ const Auction = (props) => {
           });
         });
       });
-
-      // callApi2();
-      // callApi3();
-      // callApi4();
     }
   }, [auction]);
-
-  // useEffect(() => {
-  //   const callApi = async () => {
-  //     auction.images?.map((image) => {
-  //       let result = axios
-  //         .get(`${process.env.BASE_URL}/image/${image}`)
-  //         .then((response) => {
-  //           // setImg({ uri: response.config.url });
-  //           // setLoad(true);
-  //           // urls.push({ uri: response.config.url });
-  //           const url = urls;
-  //           url.push({ url: response.config.url });
-  //           setUrls(url);
-  //           // setUrls([...urls, { url: response.config.url }]);
-  //           // setLoad(true);
-
-  //           console.log(urls);
-  //         })
-  //         .catch((error) => {
-  //           console.log({ error });
-  //           // setLoad(true);
-  //         });
-  //     });
-  //     // console.log(result);
-  //   };
-  //   // console.log(auction.images[0]);
-
-  //   // console.log(image);
-  //   callApi(); /*.then(setLoad(true));*/
-  // }, [auction]);
 
   if (!load) return <Text>Loading...</Text>;
 
@@ -161,7 +128,14 @@ const Auction = (props) => {
       }}
     >
       <Slideshow dataSource={urls} height={400} />
-      <View style={styles.container}>
+      <View
+        style={{
+          marginBottom: keyboard ? windowHeight * 0.35 : 0,
+          marginLeft: 15,
+          marginRight: 15,
+          paddingBottom: 40,
+        }}
+      >
         <View style={styles.secContainer}>
           <Text style={styles.title}>{auction.title}</Text>
           <View>
@@ -180,9 +154,14 @@ const Auction = (props) => {
         <Text>{auction.endDate}</Text>
         <View style={styles.hr} />
         <Text style={styles.secondaryTitle}>Start Bid</Text>
-        <Text>{auction.startPrice}</Text>
+        <Text>{auction.startPrice}$</Text>
         <Text style={styles.secondaryTitle}>Current Bid</Text>
-        <Text>{bid.amount}</Text>
+        {bid.amount ? (
+          <Text>{bid.amount}$</Text>
+        ) : (
+          <Text>{auction.startPrice}$</Text>
+        )}
+
         {offerBid ? (
           <View>
             <Bid bid={bid} auction={auction} onChangeBid={onChangeBidHandler} />

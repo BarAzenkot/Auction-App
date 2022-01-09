@@ -41,6 +41,7 @@ const FeedItem = (props) => {
           .get(`${baseUrl}/image/${props.image}`)
           .then((response) => {
             setImg({ uri: response.config.url });
+            // console.log(img);
             setLoad(true);
           })
           .catch((error) => {
@@ -90,7 +91,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: "bold",
-    fontSize: 20,
+    fontSize: 25,
     marginTop: 5,
   },
 });

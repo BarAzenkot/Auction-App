@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@react-native-async-storage/async-storage": "~1.15.0",
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/native-stack": "^6.2.5",
     "axios": "^0.24.0",
@@ -10,6 +11,8 @@
     "react-native-dotenv": "^3.3.1",
     "react-native-image-slider-box": "^1.1.12",
     "react-native-image-slider-show": "^1.0.3",
+    "react-native-safe-area-context": "^3.3.2",
+    "react-native-safe-area-view": "^1.1.1",
     "react-native-web": "0.17.1",
     "react-slideshow-image": "^3.6.0",
     "yarn": "^1.22.17"
