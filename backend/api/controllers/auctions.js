@@ -139,6 +139,28 @@ module.exports = {
         res.status(500).json({ err });
       });
   },
+  offerAShadowBid: (req, res) => {
+    const auctionID = req.params.auctionID;
+    Auction.findById(auctionID)
+      .then(async (auction) => {
+        if (!auction) {
+          return res.status(404).json({
+            message: "Auction not found",
+          });
+        }
+        const bidID = await setABid(req, res);
+        Bid.find(bidID).then((bid) => {
+          auction.shadowBid = bid;
+          auction.save();
+          res
+            .status(200)
+            .json({ message: `a new shadow offer for auction - ${auctionID}` });
+        });
+      })
+      .catch((err) => {
+        res.status(500).json({ err });
+      });
+  },
   getByCategory: (req, res) => {
     const category = req.params.categoryID;
     Auction.find({ category: category })

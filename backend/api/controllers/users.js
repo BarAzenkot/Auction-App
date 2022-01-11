@@ -63,12 +63,13 @@ module.exports = {
             },
             process.env.JWT_KEY,
             {
-              expiresIn: "1D",
+              expiresIn: "365d",
             }
           );
           return res.status(200).json({
             message: "Auth successful",
             token,
+            user: user._id,
           });
         }
 

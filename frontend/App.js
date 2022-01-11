@@ -7,14 +7,14 @@ import Bid from "./src/components/Bid";
 import RegisterScreen from "./src/screens/RegisterScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
-import { getToken } from "./AsyncStorageHandles";
+import { getToken, getUserID } from "./AsyncStorageHandles";
 
 const AppStack = createNativeStackNavigator();
 
 export default function App() {
   const [token, setToken] = useState();
   const [readToken, setReadToken] = useState(false);
-  // removeToken();
+  const [signedInUser, setSignedInUser] = useState("");
 
   const reReadToken = () => {
     setReadToken((lastState) => !lastState);
@@ -23,6 +23,9 @@ export default function App() {
   useEffect(() => {
     getToken().then((res) => {
       setToken(res);
+    });
+    getUserID().then((res) => {
+      setSignedInUser(res);
     });
   }, [readToken]);
 
@@ -33,15 +36,33 @@ export default function App() {
           <AppStack.Screen
             name="Feed"
             component={Feed}
-            initialParams={{ reReadToken: reReadToken }}
+            initialParams={{
+              reReadToken: reReadToken,
+              signedInUser: signedInUser,
+            }}
           />
           <AppStack.Screen name="Auction" component={Auction} />
-          <AppStack.Screen name="Bid" component={Bid} />
+
+          {console.log(signedInUser)}
         </AppStack.Navigator>
       </NavigationContainer>
     );
   }
-  return <LoginScreen reReadToken={reReadToken} />;
+  return (
+    <NavigationContainer style={styles.container}>
+      <AppStack.Navigator initialRouteName="LoginScreen">
+        <AppStack.Screen
+          name="Login"
+          component={LoginScreen}
+          initialParams={{
+            reReadToken: reReadToken,
+          }}
+        />
+        <AppStack.Screen name="RegisterScreen" component={RegisterScreen} />
+        {/* <LoginScreen reReadToken={reReadToken} /> */}
+      </AppStack.Navigator>
+    </NavigationContainer>
+  );
   // return <RegisterScreen />;
 }
 

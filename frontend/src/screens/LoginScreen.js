@@ -11,13 +11,14 @@ import AuthInput from "../components/AuthInput";
 import { windowWidth, windowHeight } from "../../Dimensions";
 import Btn from "../components/Btn";
 import axios from "axios";
-import { storeToken } from "../../AsyncStorageHandles";
+import { storeToken, storeUserID } from "../../AsyncStorageHandles";
 const baseUrl = "http://172.20.8.235:8000";
 
 const LoginScreen = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [keyboard, setKeyboard] = useState(false);
+  const [user, setUser] = useState("");
 
   useEffect(() => {
     const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
@@ -51,7 +52,10 @@ const LoginScreen = (props) => {
     axios(config)
       .then(function (response) {
         storeToken(response.data.token).then(() => {
-          props.reReadToken();
+          console.log(props.route.params);
+          storeUserID(response.data.user).then(() => {
+            props.route.params.reReadToken();
+          });
         });
       })
       .catch(function (error) {
@@ -59,15 +63,15 @@ const LoginScreen = (props) => {
       });
   };
 
-  const unsigned = () => {
-    console.log("nothing");
+  const unsignedHandler = (input) => {
+    props.navigation.navigate("RegisterScreen", input);
   };
 
   return (
     <View style={styles.wrapper}>
       <View
         style={{
-          marginTop: keyboard ? windowHeight * 0.28 : windowHeight * 0.4,
+          marginTop: keyboard ? windowHeight * 0.2 : windowHeight * 0.25,
           backgroundColor: "grey",
           borderWidth: 1,
           borderRadius: 10,
@@ -90,7 +94,7 @@ const LoginScreen = (props) => {
         <Btn onPress={onPressHandler} title="Login" />
       </View>
       <Text style={styles.text}>Do not have an account?</Text>
-      <TouchableOpacity onPress={unsigned}>
+      <TouchableOpacity onPress={unsignedHandler}>
         <Text style={styles.unsigned}>Click Here</Text>
       </TouchableOpacity>
     </View>

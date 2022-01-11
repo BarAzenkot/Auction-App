@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 require("mongoose-type-email");
 
 const userSchema = mongoose.Schema({
+  _id: mongoose.Schema.Types.ObjectId,
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   email: { type: mongoose.SchemaTypes.Email, required: true, unique: true },

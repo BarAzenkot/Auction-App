@@ -10,6 +10,11 @@ const auctionSchema = mongoose.Schema({
   images: [{ type: String, required: false }],
   bids: [{ type: mongoose.Schema.Types.ObjectId, required: true, ref: "Bid" }],
   user: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "User" },
+  shadowBid: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: false,
+    ref: "Bid",
+  },
 });
 
 module.exports = mongoose.model("Auction", auctionSchema);

@@ -57,7 +57,7 @@ const RegisterScreen = () => {
     <View style={styles.wrapper}>
       <View
         style={{
-          marginTop: keyboard ? windowHeight * 0.2 : windowHeight * 0.3,
+          marginTop: keyboard ? windowHeight * 0.1 : windowHeight * 0.2,
           backgroundColor: "grey",
           borderWidth: 1,
           borderRadius: 10,

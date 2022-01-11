@@ -3,13 +3,27 @@ import { View, Text, StyleSheet, ScrollView, Keyboard } from "react-native";
 import Slideshow from "react-native-image-slider-show";
 import Btn from "../components/Btn";
 import Bid from "../components/Bid";
+import ShadowBid from "../components/ShadowBid";
 import { windowWidth, windowHeight } from "../../Dimensions";
+import { getUserID } from "../../AsyncStorageHandles";
+// import user from "../../../backend/api/models/user";
 const axios = require("axios");
 const baseUrl = "http://172.20.8.235:8000";
 
 const Auction = (props) => {
+  const [load, setLoad] = useState(false);
+  const viewRef = useRef();
+  const isInitialMount = useRef(true);
+  const [auction, setAuction] = useState({});
+  const [bid, setBid] = useState({});
+  const [seller, setSeller] = useState({});
+  const [urls, setUrls] = useState([]);
   const [offerBid, setOfferBid] = useState(false);
   const [keyboard, setKeyboard] = useState(false);
+  const [user, setUser] = useState("");
+  const startDate = new Date(auction.startDate);
+  const endDate = new Date(auction.endDate);
+  const currDate = new Date();
 
   useEffect(() => {
     const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
@@ -33,15 +47,6 @@ const Auction = (props) => {
     setBid({ ...bid, amount });
   };
 
-  const [load, setLoad] = useState(false);
-  const viewRef = useRef();
-  const isInitialMount = useRef(true);
-
-  const [auction, setAuction] = useState({});
-  const [bid, setBid] = useState({});
-  const [seller, setSeller] = useState({});
-  const [urls, setUrls] = useState([]);
-
   useEffect(() => {
     const callApi1 = () => {
       const result = axios
@@ -51,6 +56,10 @@ const Auction = (props) => {
         });
     };
     callApi1();
+
+    getUserID().then((userID) => {
+      setUser(userID);
+    });
   }, []);
 
   useEffect(() => {
@@ -149,28 +158,71 @@ const Auction = (props) => {
         <Text>{auction.description}</Text>
         <View style={styles.hr} />
         <Text style={styles.secondaryTitle}>Start Date</Text>
-        <Text>{auction.startDate}</Text>
+        <Text>{startDate.toLocaleDateString()}</Text>
         <Text style={styles.secondaryTitle}>End Date</Text>
-        <Text>{auction.endDate}</Text>
+        <Text>{endDate.toLocaleDateString()}</Text>
         <View style={styles.hr} />
         <Text style={styles.secondaryTitle}>Start Bid</Text>
         <Text>{auction.startPrice}$</Text>
-        <Text style={styles.secondaryTitle}>Current Bid</Text>
-        {bid.amount ? (
-          <Text>{bid.amount}$</Text>
-        ) : (
-          <Text>{auction.startPrice}$</Text>
-        )}
-
-        {offerBid ? (
+        {currDate.getTime() > startDate.getTime() && (
           <View>
-            <Bid bid={bid} auction={auction} onChangeBid={onChangeBidHandler} />
-            <Btn onPress={onPressHandler} title="Close" />
+            <Text style={styles.secondaryTitle}>Current Bid</Text>
+            {bid.amount ? (
+              <Text>{bid.amount}$</Text>
+            ) : (
+              <Text>{auction.startPrice}$</Text>
+            )}
           </View>
-        ) : (
-          <Btn onPress={onPressHandler} title="Offer a Bid" />
         )}
-        {/* <Btn title="Offer a Bid" /> */}
+        <View>
+          {seller._id !== user && (
+            <View>
+              {currDate.getTime() < startDate.getTime() ? (
+                <View>
+                  {offerBid ? (
+                    <View>
+                      <ShadowBid
+                        bid={bid}
+                        auction={auction}
+                        onChangeBid={onChangeBidHandler}
+                        seller={seller._id}
+                        signedInUser={props.route.params.signedInUser}
+                      />
+                      <Btn
+                        onPress={onPressHandler}
+                        title="Close"
+                        color="dimgrey"
+                      />
+                    </View>
+                  ) : (
+                    <Btn
+                      onPress={onPressHandler}
+                      title="Offer a Shadow Bid"
+                      color="dimgrey"
+                    />
+                  )}
+                </View>
+              ) : (
+                <View>
+                  {offerBid ? (
+                    <View>
+                      <Bid
+                        bid={bid}
+                        auction={auction}
+                        onChangeBid={onChangeBidHandler}
+                        seller={seller._id}
+                        signedInUser={props.route.params.signedInUser}
+                      />
+                      <Btn onPress={onPressHandler} title="Close" />
+                    </View>
+                  ) : (
+                    <Btn onPress={onPressHandler} title="Offer a Bid" />
+                  )}
+                </View>
+              )}
+            </View>
+          )}
+        </View>
       </View>
     </ScrollView>
   );

@@ -13,8 +13,6 @@ const Bid = (props) => {
     return await getToken();
   };
 
-  // console.log(props);
-
   const onPressHandler = () => {
     console.log(amount);
   };
@@ -23,7 +21,7 @@ const Bid = (props) => {
     tokenize().then((token) => {
       axios
         .post(
-          `${baseUrl}/auctions/${props.auction._id}`,
+          `${baseUrl}/auctions/shadow/${props.auction._id}`,
           {
             amount,
           },
@@ -42,27 +40,10 @@ const Bid = (props) => {
         });
     });
   };
-  // console.log(props.bid.auction);
-  // const makeABid = async () => {
-  //   console.log(amount + "barrrrrrrrrrrrrrr");
-  //   const result = await axios
-  //     .post(`${process.env.BASE_URL/auctions/${props.bid.auction}`, {
-  //       amount: amount,
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //     })
-  //     .then((response) => {
-  //       console.log(JSON.stringify(response.data));
-  //     })
-  //     .catch((err) => {
-  //       console.log(err.response.data);
-  //     });
-  // };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.secondaryTitle}>Enter your bid</Text>
+      <Text style={styles.secondaryTitle}>Enter your Shadow bid</Text>
       <AuthInput
         placeholder="Amount"
         value={amount}
@@ -71,20 +52,12 @@ const Bid = (props) => {
         onChangeText={(input) => setAmount(input)}
       />
       {amount ? (
-        props.bid.amount ? (
-          amount <= props.bid.amount ? (
-            <Text style={styles.warning}>
-              Please enter amount greater than the current bid.
-            </Text>
-          ) : (
-            <Btn onPress={makeABid} title="Submit" />
-          )
-        ) : amount <= props.auction.startPrice ? (
+        amount <= props.auction.startPrice ? (
           <Text style={styles.warning}>
             Please enter amount greater than the start price.
           </Text>
         ) : (
-          <Btn onPress={makeABid} title="Submit" />
+          <Btn onPress={makeABid} title="Submit" color="dimgrey" />
         )
       ) : (
         <Text>{amount}</Text>

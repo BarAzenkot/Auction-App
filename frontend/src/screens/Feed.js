@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import FeedItem from "../components/FeedItem";
 import axios from "axios";
-import { removeToken } from "../../AsyncStorageHandles";
+import { clearStorage } from "../../AsyncStorageHandles";
 const baseUrl = "http://172.20.8.235:8000";
 
 const Feed = (props) => {
@@ -17,7 +17,7 @@ const Feed = (props) => {
     headerRight: () => (
       <TouchableOpacity
         onPress={() => {
-          removeToken();
+          clearStorage();
           props.route.params.reReadToken();
         }}
       >
@@ -26,7 +26,10 @@ const Feed = (props) => {
     ),
   });
   const onPressHandler = (input) => {
-    props.navigation.navigate("Auction", input);
+    props.navigation.navigate("Auction", {
+      ...input,
+      signedInUser: props.route.params.signedInUser,
+    });
   };
 
   useEffect(() => {
