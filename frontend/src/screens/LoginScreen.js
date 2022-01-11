@@ -13,6 +13,7 @@ import Btn from "../components/Btn";
 import axios from "axios";
 import { storeToken, storeUserID } from "../../AsyncStorageHandles";
 const baseUrl = "http://172.20.8.235:8000";
+const baseUrlAlternate = "http://10.100.102.12:8000";
 
 const LoginScreen = (props) => {
   const [email, setEmail] = useState("");
@@ -42,7 +43,7 @@ const LoginScreen = (props) => {
 
     var config = {
       method: "post",
-      url: `${baseUrl}/users/login`,
+      url: `${baseUrlAlternate}/users/login`,
       headers: {
         "Content-Type": "application/json",
       },

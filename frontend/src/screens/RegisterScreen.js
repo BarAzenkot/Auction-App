@@ -5,6 +5,7 @@ import Btn from "../components/Btn";
 import axios from "axios";
 import { View, StyleSheet, Keyboard } from "react-native";
 const baseUrl = "http://172.20.8.235:8000";
+const baseUrlAlternate = "http://10.100.102.12:8000";
 
 const RegisterScreen = () => {
   const [email, setEmail] = useState("");
@@ -37,7 +38,7 @@ const RegisterScreen = () => {
 
     var config = {
       method: "post",
-      url: `${baseUrl}/users/signup`,
+      url: `${baseUrlAlternate}/users/signup`,
       headers: {
         "Content-Type": "application/json",
       },

@@ -4,11 +4,13 @@ import AuthInput from "../components/AuthInput";
 import Btn from "../components/Btn";
 const axios = require("axios");
 const baseUrl = "http://172.20.8.235:8000";
+const baseUrlAlternate = "http://10.100.102.12:8000";
 import { getToken } from "../../AsyncStorageHandles";
 
 const Bid = (props) => {
   const [amount, setAmount] = useState();
   const [bid, setBid] = useState({});
+  const [numOfBids, setNumOfBids] = useState();
   const tokenize = async () => {
     return await getToken();
   };
@@ -23,7 +25,7 @@ const Bid = (props) => {
     tokenize().then((token) => {
       axios
         .post(
-          `${baseUrl}/auctions/${props.auction._id}`,
+          `${baseUrlAlternate}/auctions/${props.auction._id}`,
           {
             amount,
           },
@@ -35,6 +37,7 @@ const Bid = (props) => {
         )
         .then((res) => {
           props.onChangeBid(amount);
+          setNumOfBids(res.numOfBids);
           setAmount("");
         })
         .catch((err) => {

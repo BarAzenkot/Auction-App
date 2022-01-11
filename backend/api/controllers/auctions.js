@@ -128,39 +128,49 @@ module.exports = {
         }
         const bidID = await setABid(req, res);
         Bid.findById(bidID).then((bid) => {
-          auction.bids.push(bid);
-          auction.save();
-          res
-            .status(200)
-            .json({ message: `a new offer for auction - ${auctionID}` });
+          Bid.findById(auction.bids[auction.bids.length - 1]).then(
+            (currentBid) => {
+              console.log(currentBid);
+              console.log(bid);
+              currentBid && currentBid.amount < bid.amount
+                ? auction.bids.push(bid)
+                : auction.bids.unshift(bid);
+              auction.save();
+              res.status(200).json({
+                message: `a new offer for auction - ${auctionID}`,
+                NumOfBids: auction.bids.length,
+              });
+            }
+          );
         });
       })
       .catch((err) => {
         res.status(500).json({ err });
       });
   },
-  offerAShadowBid: (req, res) => {
-    const auctionID = req.params.auctionID;
-    Auction.findById(auctionID)
-      .then(async (auction) => {
-        if (!auction) {
-          return res.status(404).json({
-            message: "Auction not found",
-          });
-        }
-        const bidID = await setABid(req, res);
-        Bid.find(bidID).then((bid) => {
-          auction.shadowBid = bid;
-          auction.save();
-          res
-            .status(200)
-            .json({ message: `a new shadow offer for auction - ${auctionID}` });
-        });
-      })
-      .catch((err) => {
-        res.status(500).json({ err });
-      });
-  },
+  // offerAShadowBid: (req, res) => {
+  //   const auctionID = req.params.auctionID;
+  //   console.log("\n\n\nhere\n\n\n");
+  //   Auction.findById(auctionID)
+  //     .then(async (auction) => {
+  //       if (!auction) {
+  //         return res.status(404).json({
+  //           message: "Auction not found",
+  //         });
+  //       }
+  //       const bidID = await setABid(req, res);
+  //       Bid.find(bidID).then((bid) => {
+  //         auction.shadowBid = bid;
+  //         auction.save();
+  //         res
+  //           .status(200)
+  //           .json({ message: `a new shadow offer for auction - ${auctionID}` });
+  //       });
+  //     })
+  //     .catch((err) => {
+  //       res.status(500).json({ err });
+  //     });
+  // },
   getByCategory: (req, res) => {
     const category = req.params.categoryID;
     Auction.find({ category: category })

@@ -12,7 +12,7 @@ const {
   offerABid,
   getByCategory,
   deleteAllAuctions,
-  offerAShadowBid,
+  // offerAShadowBid,
 } = require("../controllers/auctions");
 
 router.get("/", /*checkAuth,*/ getAllAuctions);
@@ -21,7 +21,7 @@ router.patch("/:auctionID", checkAuth, updateAuction);
 router.delete("/:auctionID", checkAuth, deleteAuction);
 router.get("/:auctionID", /*checkAuth,*/ getOneAuction);
 router.post("/:auctionID", checkAuth, offerABid);
-router.post("/shadow/:auctionID", checkAuth, offerAShadowBid);
+// router.post("/shadow/:auctionID", checkAuth, offerAShadowBid);
 router.get("/categories/:categoryID", checkAuth, getByCategory);
 router.delete("/", deleteAllAuctions);
 

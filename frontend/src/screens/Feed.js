@@ -10,6 +10,7 @@ import FeedItem from "../components/FeedItem";
 import axios from "axios";
 import { clearStorage } from "../../AsyncStorageHandles";
 const baseUrl = "http://172.20.8.235:8000";
+const baseUrlAlternate = "http://10.100.102.12:8000";
 
 const Feed = (props) => {
   const [feedItems, setFeedItems] = useState([]);
@@ -35,11 +36,11 @@ const Feed = (props) => {
   useEffect(() => {
     const callApi = () => {
       const result = axios
-        .get(`${baseUrl}/auctions/`)
+        .get(`${baseUrlAlternate}/auctions/`)
         .then((response) => setFeedItems(response.data.auctions));
     };
     callApi();
-  }, [`${baseUrl}/auctions`]);
+  }, [`${baseUrlAlternate}/auctions`]);
 
   return (
     <ScrollView style={styles.container}>

@@ -9,6 +9,7 @@ import { getUserID } from "../../AsyncStorageHandles";
 // import user from "../../../backend/api/models/user";
 const axios = require("axios");
 const baseUrl = "http://172.20.8.235:8000";
+const baseUrlAlternate = "http://10.100.102.12:8000";
 
 const Auction = (props) => {
   const [load, setLoad] = useState(false);
@@ -50,7 +51,7 @@ const Auction = (props) => {
   useEffect(() => {
     const callApi1 = () => {
       const result = axios
-        .get(`${baseUrl}/auctions/${props.route.params.id}`)
+        .get(`${baseUrlAlternate}/auctions/${props.route.params.id}`)
         .then((response) => {
           setAuction(response.data.auction);
         });
@@ -70,7 +71,7 @@ const Auction = (props) => {
         const bidID = auction.bids ? auction.bids.pop() : null;
         if (bidID) {
           const result = axios
-            .get(`${baseUrl}/bids/${bidID}`)
+            .get(`${baseUrlAlternate}/bids/${bidID}`)
             .then((response) => {
               setBid(response.data.bid);
             })
@@ -82,7 +83,7 @@ const Auction = (props) => {
       const callApi3 = async () => {
         const sellerID = auction.user;
         const result = axios
-          .get(`${baseUrl}/users/${sellerID}`)
+          .get(`${baseUrlAlternate}/users/${sellerID}`)
           .then((response) => {
             setSeller(response.data.user);
           })
@@ -93,7 +94,7 @@ const Auction = (props) => {
       const callApi4 = async () => {
         auction.images?.map((image) => {
           let result = axios
-            .get(`${baseUrl}/image/${image}`)
+            .get(`${baseUrlAlternate}/image/${image}`)
             .then((response) => {
               // const url = urls;
               // url.push({ url: response.config.url });
@@ -121,11 +122,14 @@ const Auction = (props) => {
         callApi3().then(() => {
           callApi4().then(() => {
             setLoad(true);
+            console.log(auction);
           });
         });
       });
     }
   }, [auction]);
+
+  console.log(auction);
 
   if (!load) return <Text>Loading...</Text>;
 
@@ -174,55 +178,59 @@ const Auction = (props) => {
             )}
           </View>
         )}
-        <View>
-          {seller._id !== user && (
-            <View>
-              {currDate.getTime() < startDate.getTime() ? (
-                <View>
-                  {offerBid ? (
-                    <View>
-                      <ShadowBid
-                        bid={bid}
-                        auction={auction}
-                        onChangeBid={onChangeBidHandler}
-                        seller={seller._id}
-                        signedInUser={props.route.params.signedInUser}
-                      />
-                      <Btn
-                        onPress={onPressHandler}
-                        title="Close"
-                        color="dimgrey"
-                      />
-                    </View>
-                  ) : (
+        {seller._id !== user ? (
+          <View>
+            {currDate.getTime() < startDate.getTime() ? (
+              <View>
+                {offerBid ? (
+                  <View>
+                    <ShadowBid
+                      bid={bid}
+                      auction={auction}
+                      onChangeBid={onChangeBidHandler}
+                      seller={seller._id}
+                      signedInUser={props.route.params.signedInUser}
+                    />
                     <Btn
                       onPress={onPressHandler}
-                      title="Offer a Shadow Bid"
+                      title="Close"
                       color="dimgrey"
                     />
-                  )}
-                </View>
-              ) : (
-                <View>
-                  {offerBid ? (
-                    <View>
-                      <Bid
-                        bid={bid}
-                        auction={auction}
-                        onChangeBid={onChangeBidHandler}
-                        seller={seller._id}
-                        signedInUser={props.route.params.signedInUser}
-                      />
-                      <Btn onPress={onPressHandler} title="Close" />
-                    </View>
-                  ) : (
-                    <Btn onPress={onPressHandler} title="Offer a Bid" />
-                  )}
-                </View>
-              )}
-            </View>
-          )}
-        </View>
+                  </View>
+                ) : (
+                  <Btn
+                    onPress={onPressHandler}
+                    title="Offer a Shadow Bid"
+                    color="dimgrey"
+                  />
+                )}
+              </View>
+            ) : (
+              <View>
+                {offerBid ? (
+                  <View>
+                    <Bid
+                      bid={bid}
+                      auction={auction}
+                      onChangeBid={onChangeBidHandler}
+                      seller={seller._id}
+                      signedInUser={props.route.params.signedInUser}
+                    />
+                    <Btn onPress={onPressHandler} title="Close" />
+                  </View>
+                ) : (
+                  <Btn onPress={onPressHandler} title="Offer a Bid" />
+                )}
+              </View>
+            )}
+          </View>
+        ) : (
+          <View>
+            <View style={styles.hr} />
+            <Text style={styles.secondaryTitle}>Number Of Shadow Offers</Text>
+            <Text>{auction.bids.length + 1}</Text>
+          </View>
+        )}
       </View>
     </ScrollView>
   );
