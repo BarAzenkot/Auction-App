@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import axios from "axios";
 import Btn from "../components/Btn";
-const baseUrl = "http://172.20.8.235:8000";
+const baseUrl = "http://192.168.31.95:8000";
 const baseUrlAlternate = "http://10.100.102.12:8000";
 
 const FeedItem = (props) => {
@@ -39,7 +39,7 @@ const FeedItem = (props) => {
     const callApi = () => {
       if (props.image) {
         const result = axios
-          .get(`${baseUrlAlternate}/image/${props.image}`)
+          .get(`${baseUrl}/image/${props.image}`)
           .then((response) => {
             setImg({ uri: response.config.url });
             // console.log(img);

@@ -6,9 +6,10 @@ import Bid from "../components/Bid";
 import ShadowBid from "../components/ShadowBid";
 import { windowWidth, windowHeight } from "../../Dimensions";
 import { getUserID } from "../../AsyncStorageHandles";
+import Loading from "./Loading";
 // import user from "../../../backend/api/models/user";
 const axios = require("axios");
-const baseUrl = "http://172.20.8.235:8000";
+const baseUrl = "http://192.168.31.95:8000";
 const baseUrlAlternate = "http://10.100.102.12:8000";
 
 const Auction = (props) => {
@@ -51,7 +52,7 @@ const Auction = (props) => {
   useEffect(() => {
     const callApi1 = () => {
       const result = axios
-        .get(`${baseUrlAlternate}/auctions/${props.route.params.id}`)
+        .get(`${baseUrl}/auctions/${props.route.params.id}`)
         .then((response) => {
           setAuction(response.data.auction);
         });
@@ -71,7 +72,7 @@ const Auction = (props) => {
         const bidID = auction.bids ? auction.bids.pop() : null;
         if (bidID) {
           const result = axios
-            .get(`${baseUrlAlternate}/bids/${bidID}`)
+            .get(`${baseUrl}/bids/${bidID}`)
             .then((response) => {
               setBid(response.data.bid);
             })
@@ -83,7 +84,7 @@ const Auction = (props) => {
       const callApi3 = async () => {
         const sellerID = auction.user;
         const result = axios
-          .get(`${baseUrlAlternate}/users/${sellerID}`)
+          .get(`${baseUrl}/users/${sellerID}`)
           .then((response) => {
             setSeller(response.data.user);
           })
@@ -93,8 +94,9 @@ const Auction = (props) => {
       };
       const callApi4 = async () => {
         auction.images?.map((image) => {
+          console.log(image);
           let result = axios
-            .get(`${baseUrlAlternate}/image/${image}`)
+            .get(`${baseUrl}/image/${image}`)
             .then((response) => {
               // const url = urls;
               // url.push({ url: response.config.url });
@@ -112,26 +114,29 @@ const Auction = (props) => {
                 }
                 return urlsArr;
               });
+              urls.length === auction.images.length && setLoad(true);
             })
             .catch((error) => {
               response.status(500).json({ err });
             });
         });
       };
+
       callApi2().then(() => {
         callApi3().then(() => {
-          callApi4().then(() => {
-            setLoad(true);
-            console.log(auction);
-          });
+          callApi4();
         });
       });
     }
   }, [auction]);
 
-  console.log(auction);
+  // useEffect(() => {
+  //   urls.length > 0 && setLoad(true);
+  // }, [urls]);
 
-  if (!load) return <Text>Loading...</Text>;
+  // console.log(auction);
+
+  if (!load) return <Loading />;
 
   return (
     <ScrollView

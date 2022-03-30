@@ -4,7 +4,7 @@ import { windowWidth, windowHeight } from "../../Dimensions";
 import Btn from "../components/Btn";
 import axios from "axios";
 import { View, StyleSheet, Keyboard } from "react-native";
-const baseUrl = "http://172.20.8.235:8000";
+const baseUrl = "http://192.168.31.95:8000";
 const baseUrlAlternate = "http://10.100.102.12:8000";
 
 const RegisterScreen = () => {
@@ -38,7 +38,7 @@ const RegisterScreen = () => {
 
     var config = {
       method: "post",
-      url: `${baseUrlAlternate}/users/signup`,
+      url: `${baseUrl}/users/signup`,
       headers: {
         "Content-Type": "application/json",
       },
