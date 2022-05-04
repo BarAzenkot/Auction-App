@@ -81,6 +81,7 @@ app.get("/image/:filename", (req, res) => {
       const readStream = gfs.createReadStream(file.filename);
       readStream.pipe(res);
     } else {
+      console.log("hereeeeeeeeeeeeeeeeeeeeeeeeeeeee\n");
       res.status(500).json({ err: "Not an image." });
     }
   });

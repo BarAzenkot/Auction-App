@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import axios from "axios";
 import Btn from "../components/Btn";
+import { windowHeight } from "../../Dimensions";
 const baseUrl = "http://192.168.31.95:8000";
 const baseUrlAlternate = "http://10.100.102.12:8000";
 
@@ -66,10 +67,16 @@ const FeedItem = (props) => {
   // setImg(props.image ? props.image : "../../assets/not-found.jpg");
   // console.log(`${img}`);
 
-  if (!load) return <Text>Loading...</Text>;
+  if (!load) return <View style={styles.backdrop}></View>;
 
   return (
-    <TouchableOpacity onPress={onPressHandler} style={styles.container}>
+    <TouchableOpacity
+      onPress={onPressHandler}
+      style={{
+        ...styles.container,
+        marginBottom: props.dataSize - 1 === props.index ? windowHeight / 9 : 0,
+      }}
+    >
       <Image style={styles.stretch} source={img} />
       <Text style={styles.title}>{props.title}</Text>
       <Text style={styles.description}>{props.description}</Text>
@@ -94,6 +101,9 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 25,
     marginTop: 5,
+  },
+  backdrop: {
+    height: windowHeight,
   },
 });
 

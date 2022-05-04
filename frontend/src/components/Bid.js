@@ -11,38 +11,69 @@ const Bid = (props) => {
   const [amount, setAmount] = useState();
   const [bid, setBid] = useState({});
   const [numOfBids, setNumOfBids] = useState();
+  const [flag, setFlag] = useState(true);
   const tokenize = async () => {
     return await getToken();
   };
 
-  // console.log(props);
+  const checkMaxPrice = (bid, token) => {
+    axios
+      .get(`${baseUrl}/bids/${bid}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        if (res.data.bid.amount >= amount) {
+          alert("Error, Someone offered higher bid.");
+          setFlag(false);
+        }
+      });
+  };
 
-  const onPressHandler = () => {
-    console.log(amount);
+  const getLastBid = (token) => {
+    axios
+      .get(`${baseUrl}/auctions/${props.auction._id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) =>
+        checkMaxPrice(
+          res.data.auction.bids[res.data.auction.bids.length - 1],
+          token
+        )
+      )
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const makeABid = () => {
     tokenize().then((token) => {
-      axios
-        .post(
-          `${baseUrl}/auctions/${props.auction._id}`,
-          {
-            amount,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
+      getLastBid(token);
+      if (flag) {
+        axios
+          .post(
+            `${baseUrl}/auctions/${props.auction._id}`,
+            {
+              amount,
             },
-          }
-        )
-        .then((res) => {
-          props.onChangeBid(amount);
-          setNumOfBids(res.numOfBids);
-          setAmount("");
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          )
+          .then((res) => {
+            props.onChangeBid(amount);
+            setNumOfBids(res.numOfBids);
+            setAmount("");
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
     });
   };
   // console.log(props.bid.auction);

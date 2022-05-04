@@ -6,9 +6,12 @@ const { setABid } = require("./bids");
 
 module.exports = {
   getAllAuctions: (req, res) => {
+    const today = new Date();
     console.log(req.user);
-    Auction.find()
+    Auction.find({ endDate: { $gt: today } })
       .then((auctions) => {
+        console.log(auctions[0].endDate);
+        console.log(today);
         res.status(200).json({
           auctions,
         });

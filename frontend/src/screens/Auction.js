@@ -26,6 +26,7 @@ const Auction = (props) => {
   const startDate = new Date(auction.startDate);
   const endDate = new Date(auction.endDate);
   const currDate = new Date();
+  const listener = useRef();
 
   useEffect(() => {
     const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
@@ -89,7 +90,7 @@ const Auction = (props) => {
             setSeller(response.data.user);
           })
           .catch((error) => {
-            res.status(500).json({ err });
+            console.log(error);
           });
       };
       const callApi4 = async () => {
@@ -117,7 +118,7 @@ const Auction = (props) => {
               urls.length === auction.images.length && setLoad(true);
             })
             .catch((error) => {
-              response.status(500).json({ err });
+              console.log(error);
             });
         });
       };
@@ -176,6 +177,7 @@ const Auction = (props) => {
         {currDate.getTime() > startDate.getTime() && (
           <View>
             <Text style={styles.secondaryTitle}>Current Bid</Text>
+            {/*HERE WE SHOULD CHANGE*/}
             {bid.amount ? (
               <Text>{bid.amount}$</Text>
             ) : (
@@ -231,9 +233,15 @@ const Auction = (props) => {
           </View>
         ) : (
           <View>
-            <View style={styles.hr} />
-            <Text style={styles.secondaryTitle}>Number Of Shadow Offers</Text>
-            <Text>{auction.bids.length + 1}</Text>
+            {currDate.getTime() < startDate.getTime() && (
+              <View>
+                <View style={styles.hr} />
+                <Text style={styles.secondaryTitle}>
+                  Number Of Shadow Offers
+                </Text>
+                <Text>{auction.bids.length + 1}</Text>
+              </View>
+            )}
           </View>
         )}
       </View>
