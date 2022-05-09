@@ -24,6 +24,7 @@ module.exports = {
           password: hash,
           username,
           fullName,
+          coins: 0,
         });
 
         user
@@ -84,8 +85,39 @@ module.exports = {
 
     User.findById(userID)
       .then((user) => {
+        if (!user) {
+          return res.status(404).json({
+            message: "User not found",
+          });
+        }
         res.status(200).json({
           user,
+        });
+      })
+      .catch((err) => {
+        res.status(500).json({ err });
+      });
+  },
+  chargeCoins: (req, res) => {
+    const userID = req.params.userID;
+    const coins = req.body.coins;
+
+    User.findById(userID)
+      .then((user) => {
+        if (!user) {
+          return res.status(404).json({
+            message: "User not found",
+          });
+        }
+        User.updateOne(
+          { _id: userID },
+          { $set: { coins: user.coins + coins } }
+        ).then(() => {
+          res.status(200).json({
+            message: `Added ${coins}$ to your wallet. Now u got ${
+              user.coins + coins
+            }$.`,
+          });
         });
       })
       .catch((err) => {

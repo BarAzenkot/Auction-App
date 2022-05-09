@@ -11,7 +11,7 @@ const userSchema = mongoose.Schema({
   auctions: [
     { type: mongoose.Schema.Types.ObjectId, required: false, ref: "Auction" },
   ],
-  //payment??????
+  coins: { type: Number, required: true },
 });
 
 module.exports = mongoose.model("User", userSchema);
