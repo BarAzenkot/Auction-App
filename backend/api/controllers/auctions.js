@@ -130,11 +130,10 @@ module.exports = {
           });
         }
         const bidID = await setABid(req, res);
+        console.log("bkaaaaa", bidID);
         Bid.findById(bidID).then((bid) => {
           Bid.findById(auction.bids[auction.bids.length - 1]).then(
             (currentBid) => {
-              console.log(currentBid);
-              console.log(bid);
               currentBid && currentBid.amount < bid.amount
                 ? auction.bids.push(bid)
                 : auction.bids.unshift(bid);

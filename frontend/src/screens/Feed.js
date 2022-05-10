@@ -11,7 +11,7 @@ import {
 import { windowHeight, windowWidth } from "../../Dimensions";
 import FeedItem from "../components/FeedItem";
 import axios from "axios";
-import { clearStorage } from "../../AsyncStorageHandles";
+import { clearStorage, getUserID, getToken } from "../../AsyncStorageHandles";
 const baseUrl = "http://192.168.31.95:8000";
 const baseUrlAlternate = "http://10.100.102.12:8000";
 
@@ -21,6 +21,19 @@ const Feed = (props) => {
   const [totalFetch, setTotalFetch] = useState(2);
   const [img, setImg] = useState(require("../../assets/down-chevron.png"));
   const flatList = useRef();
+  const tokenize = async () => {
+    return await getToken();
+  };
+
+  useEffect(() => {
+    tokenize().then((token) => {
+      axios.get(`${baseUrl}/users/${getUserID()}/refund`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    });
+  }, []);
 
   const fetchMore = () => {
     setData((prevState) => [

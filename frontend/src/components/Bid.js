@@ -1,20 +1,43 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import AuthInput from "../components/AuthInput";
 import Btn from "../components/Btn";
 const axios = require("axios");
 const baseUrl = "http://192.168.31.95:8000";
 const baseUrlAlternate = "http://10.100.102.12:8000";
-import { getToken } from "../../AsyncStorageHandles";
+import { getToken, getUserID } from "../../AsyncStorageHandles";
 
 const Bid = (props) => {
   const [amount, setAmount] = useState();
   const [bid, setBid] = useState({});
   const [numOfBids, setNumOfBids] = useState();
   const [flag, setFlag] = useState(true);
+  const [userCoins, setUserCoins] = useState(0);
   const tokenize = async () => {
     return await getToken();
   };
+
+  useEffect(() => {
+    tokenize()
+      .then((token) => {
+        axios
+          .get(`${baseUrl}/users/${props.user}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then((res) => {
+            setUserCoins(res.data.user.coins);
+            console.log(userCoins);
+          })
+          .catch((err) => {
+            console.log(err.message);
+          });
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
 
   const checkMaxPrice = (bid, token) => {
     axios
@@ -68,6 +91,7 @@ const Bid = (props) => {
           .then((res) => {
             props.onChangeBid(amount);
             setNumOfBids(res.numOfBids);
+            setUserCoins((prev) => prev - amount);
             setAmount("");
           })
           .catch((err) => {
@@ -105,7 +129,11 @@ const Bid = (props) => {
         onChangeText={(input) => setAmount(input)}
       />
       {amount ? (
-        props.bid.amount ? (
+        userCoins < amount ? (
+          <Text style={styles.warning}>
+            You don't have enough coins in your wallet, {userCoins}$ left.
+          </Text>
+        ) : props.bid.amount ? (
           amount <= props.bid.amount ? (
             <Text style={styles.warning}>
               Please enter amount greater than the current bid.

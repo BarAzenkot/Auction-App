@@ -21,6 +21,12 @@ module.exports = {
           message: "User not found",
         });
       }
+      if (user.coins < amount) {
+        return res.status(500).json({
+          message: "Don't have enough coins.",
+        });
+      }
+      user.coins -= amount;
       user.bids.push(bid);
       user.save();
     });

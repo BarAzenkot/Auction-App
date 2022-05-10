@@ -197,6 +197,7 @@ const Auction = (props) => {
                       onChangeBid={onChangeBidHandler}
                       seller={seller._id}
                       signedInUser={props.route.params.signedInUser}
+                      user={user}
                     />
                     <Btn
                       onPress={onPressHandler}
@@ -222,6 +223,7 @@ const Auction = (props) => {
                       onChangeBid={onChangeBidHandler}
                       seller={seller._id}
                       signedInUser={props.route.params.signedInUser}
+                      user={user}
                     />
                     <Btn onPress={onPressHandler} title="Close" />
                   </View>
