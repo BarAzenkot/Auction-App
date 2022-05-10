@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import axios from "axios";
 import Btn from "../components/Btn";
 import { windowHeight } from "../../Dimensions";
-const baseUrl = "http://192.168.0.174:8000";
+const baseUrl = "http://192.168.31.95:8000";
 const baseUrlAlternate = "http://10.100.102.12:8000";
 
 const FeedItem = (props) => {

@@ -9,7 +9,7 @@ import { getUserID } from "../../AsyncStorageHandles";
 import Loading from "./Loading";
 // import user from "../../../backend/api/models/user";
 const axios = require("axios");
-const baseUrl = "http://192.168.0.174:8000";
+const baseUrl = "http://192.168.31.95:8000";
 const baseUrlAlternate = "http://10.100.102.12:8000";
 
 const Auction = (props) => {
