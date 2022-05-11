@@ -14,6 +14,7 @@ const bidSchema = mongoose.Schema({
     required: true,
     ref: "User",
   },
+  expired: { type: Boolean, required: true, default: false },
 });
 
 module.exports = mongoose.model("Bid", bidSchema);

@@ -12,7 +12,7 @@ import { windowHeight, windowWidth } from "../../Dimensions";
 import FeedItem from "../components/FeedItem";
 import axios from "axios";
 import { clearStorage, getUserID, getToken } from "../../AsyncStorageHandles";
-const baseUrl = "http://192.168.31.95:8000";
+const baseUrl = "http://192.168.0.84:8000";
 const baseUrlAlternate = "http://10.100.102.12:8000";
 
 const Feed = (props) => {
@@ -27,11 +27,44 @@ const Feed = (props) => {
 
   useEffect(() => {
     tokenize().then((token) => {
-      axios.get(`${baseUrl}/users/${getUserID()}/refund`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      axios
+        .get(`${baseUrl}/users/${getUserID()}/bids`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(function (response) {
+          const userBids = response.data.bids;
+          userBids.map((bid) => {
+            axios
+              .get(`${baseUrl}/users/${bid}/auction`, {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              })
+              .then(function (response) {
+                const auction = response.data.auction;
+                axios
+                  .get(`${baseUrl}/users/${auction}/${bid}/refund`, {
+                    headers: {
+                      Authorization: `Bearer ${token}`,
+                    },
+                  })
+                  .then(function (response) {
+                    console.log(JSON.stringify(response.data));
+                  })
+                  .catch(function (error) {
+                    console.log(error);
+                  });
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
+          });
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     });
   }, []);
 
@@ -43,6 +76,7 @@ const Feed = (props) => {
         Math.min(prevState.length + 2, feedItems.length)
       ),
     ]);
+    console.log("ALL DATA:\n", data);
   };
 
   props.navigation.setOptions({

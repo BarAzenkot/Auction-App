@@ -101,6 +101,24 @@ module.exports = {
         res.status(500).json({ err });
       });
   },
+  getMyUser: (req, res) => {
+    const userID = req.user.id;
+
+    User.findById(userID)
+      .then((user) => {
+        if (!user) {
+          return res.status(404).json({
+            message: "User not found",
+          });
+        }
+        return res.status(200).json({
+          user,
+        });
+      })
+      .catch((err) => {
+        res.status(500).json({ err });
+      });
+  },
   chargeCoins: (req, res) => {
     const userID = req.params.userID;
     const coins = req.body.coins;
@@ -127,24 +145,84 @@ module.exports = {
         res.status(500).json({ err });
       });
   },
-  getUserBids: (req, res) => {
-    const userID = req.user.id;
-    console.log("THIS IS USER: ", userID);
-    User.findById(userID).then((user) => {
-      if (!user) {
-        return res.status(404).json({
-          message: "User not found",
+  getAuction: (req, res) => {
+    console.log("HEREEEEEEEEEEEEEEEEEEEEEEEEEEEE2");
+
+    const bidID = req.params.bidID;
+    Bid.findById(bidID)
+      .then((bid) => {
+        const auction = bid.auction;
+        return res.status(200).json({
+          auction,
         });
-      }
-      const bids = user.bids;
-      res.status(200).json({
-        bids,
+      })
+      .catch((err) => {
+        res.status(500).json({ err });
       });
-    });
   },
-  refund: (req, res) => {
+  getUserBids: (req, res) => {
+    console.log("HEREEEEEEEEEEEEEEEEEEEEEEEEEEEE1");
+
+    const userID = req.user.id;
+    User.findById(userID)
+      .then((user) => {
+        const bids = user.bids;
+        return res.status(200).json({ bids });
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json({ err });
+      });
+  },
+  updateCoins: (req, res) => {
+    const auctionID = req.params.auctionID;
+    const userID = req.user.id;
+    const bidID = req.params.bidID;
+    let coins;
+    Auction.findById(auctionID)
+      .then((auction) => {
+        if (bidID !== auction.bids[0]) {
+          Bid.findById(bidID).then((bid) => {
+            if (!bid.expired) {
+              coins = bid.amount;
+              bid.expired = true;
+              bid.save();
+              User.findById(userID).then((user) => {
+                user.coins += bid.amount;
+                user.save();
+                res.status(200).json({
+                  userID,
+                });
+              });
+            }
+          });
+        }
+      })
+      .catch((err) => {
+        res.status(500).json({ err });
+      });
+  },
+  refund: (req, res, bidID, auction) => {
+    let coins = 0;
+    Bid.findById(bidID)
+      .then((bid) => {
+        if (bid.id !== auction.bids[0]) {
+          coins += bid.amount;
+        }
+        res.status(200).json({ coins });
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json({ err });
+      });
+  },
+  refund2: async (req, res, bid) => {
     const userID = req.user.id;
     console.log("THIS IS USER: ", userID);
+    // let coins = 0;
+    const bids = await getUserBids(req, res);
+    console.log(bids);
+    const coins = [];
     User.findById(userID)
       .then((user) => {
         const bids = user.bids;
@@ -154,29 +232,29 @@ module.exports = {
             Bid.findById(bidID).then((bid) => {
               if (bid === null) return;
               Auction.findById(bid.auction).then((auction) => {
-                console.log("before: ", user.coins);
                 if (bid.id !== auction.bids[0] && bids.includes(bid.id)) {
-                  // auction.endDate < new Date();
-                  user.coins += bid.amount;
-                  auction.bids = auction.bids.filter(
-                    (item) => bid.id !== item.toString()
-                  );
-                  auction.save();
-                  console.log("after: ", user.coins);
-
+                  coins.push(bid.amount);
+                  console.log(coins);
+                  // auction.bids = auction.bids.filter(
+                  //   (item) => bid.id !== item.toString()
+                  // );
+                  // auction.save();
                   // console.log("--- ", bid.amount);
                   // console.log(auction.bids[0]);
                 }
               });
             });
           });
-          user.save();
-          res.status(200).json({
-            bids,
-          });
         }
       })
+      .then(
+        console.log(coins)
+        // res.status(200).json({
+        //   coins,
+        // })
+      )
       .catch((err) => {
+        console.log(err);
         res.status(500).json({ err });
       });
   },
