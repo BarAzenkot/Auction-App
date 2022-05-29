@@ -9,7 +9,7 @@ import { getUserID } from "../../AsyncStorageHandles";
 import Loading from "./Loading";
 // import user from "../../../backend/api/models/user";
 const axios = require("axios");
-const baseUrl = "http://192.168.0.84:8000";
+const baseUrl = "http://192.168.0.174:8000";
 const baseUrlAlternate = "http://10.100.102.12:8000";
 
 const Auction = (props) => {
@@ -84,6 +84,7 @@ const Auction = (props) => {
       };
       const callApi3 = async () => {
         const sellerID = auction.user;
+        console.log("Seller ID: ", sellerID);
         const result = axios
           .get(`${baseUrl}/users/${sellerID}`)
           .then((response) => {
@@ -95,7 +96,7 @@ const Auction = (props) => {
       };
       const callApi4 = async () => {
         auction.images?.map((image) => {
-          console.log(image);
+          console.log("THIS IS IMAGE: ", image);
           let result = axios
             .get(`${baseUrl}/image/${image}`)
             .then((response) => {
@@ -130,6 +131,89 @@ const Auction = (props) => {
       });
     }
   }, [auction]);
+
+  useEffect(() => {
+    const result = axios
+      .get(`${baseUrl}/auctions/${props.route.params.id}`)
+      .then((response) => {
+        setAuction(response.data.auction);
+      });
+
+    getUserID().then((userID) => {
+      console.log(userID);
+      setUser(userID);
+    });
+  }, []);
+
+  // useEffect(async () => {
+  //   const result = axios
+  //     .get(`${baseUrl}/auctions/${props.route.params.id}`)
+  //     .then((response) => {
+  //       setAuction(response.data.auction);
+  //     })
+  //     .then(() => {
+  //       getUserID().then((userID) => {
+  //         console.log(userID);
+  //         setUser(userID);
+  //         console.log(user);
+  //       });
+
+  //       if (isInitialMount.current) {
+  //         isInitialMount.current = false;
+  //       } else {
+  //         const bidID = auction.bids ? auction.bids.pop() : null;
+  //         if (bidID) {
+  //           const result = axios
+  //             .get(`${baseUrl}/bids/${bidID}`)
+  //             .then((response) => {
+  //               setBid(response.data.bid);
+  //             })
+  //             .catch((error) => {
+  //               console.log(error);
+  //             });
+  //         }
+
+  //         const sellerID = auction.user;
+  //         console.log("Seller ID: ", sellerID);
+  //         const result = axios
+  //           .get(`${baseUrl}/users/${sellerID}`)
+  //           .then((response) => {
+  //             setSeller(response.data.user);
+  //           })
+  //           .catch((error) => {
+  //             console.log(error);
+  //           });
+
+  //         auction.images?.map((image) => {
+  //           console.log("THIS IS IMAGE: ", image);
+  //           let result = axios
+  //             .get(`${baseUrl}/image/${image}`)
+  //             .then((response) => {
+  //               // const url = urls;
+  //               // url.push({ url: response.config.url });
+  //               // setUrls([...new Set(url)]);
+  //               setUrls((lastState) => {
+  //                 let alreadyIn = false;
+  //                 let urlsArr = lastState;
+  //                 lastState.forEach((url) => {
+  //                   if (url.url === response.config.url) {
+  //                     alreadyIn = true;
+  //                   }
+  //                 });
+  //                 if (!alreadyIn) {
+  //                   urlsArr.push({ url: response.config.url });
+  //                 }
+  //                 return urlsArr;
+  //               });
+  //               urls.length === auction.images.length && setLoad(true);
+  //             })
+  //             .catch((error) => {
+  //               console.log(error);
+  //             });
+  //         });
+  //       }
+  //     });
+  // }, [auction]);
 
   // useEffect(() => {
   //   urls.length > 0 && setLoad(true);

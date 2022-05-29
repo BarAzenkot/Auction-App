@@ -4,7 +4,7 @@ import { windowWidth, windowHeight } from "../../Dimensions";
 import Btn from "../components/Btn";
 import axios from "axios";
 import { View, StyleSheet, Keyboard } from "react-native";
-const baseUrl = "http://192.168.0.84:8000";
+const baseUrl = "http://192.168.0.174:8000";
 const baseUrlAlternate = "http://10.100.102.12:8000";
 
 const RegisterScreen = () => {
@@ -68,23 +68,27 @@ const RegisterScreen = () => {
       >
         <AuthInput
           placeholder="Email"
+          placeholderTextColor="grey"
           keyboardType="email-address"
           returnKeyType="done"
           onChangeText={(input) => setEmail(input)}
         />
         <AuthInput
           placeholder="Password"
+          placeholderTextColor="grey"
           secureTextEntry={true}
           returnKeyType="done"
           onChangeText={(input) => setPassword(input)}
         />
         <AuthInput
           placeholder="Username"
+          placeholderTextColor="grey"
           returnKeyType="done"
           onChangeText={(input) => setUsername(input)}
         />
         <AuthInput
           placeholder="Full Name"
+          placeholderTextColor="grey"
           returnKeyType="done"
           onChangeText={(input) => setFullName(input)}
         />

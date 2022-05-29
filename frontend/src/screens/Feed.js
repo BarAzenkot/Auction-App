@@ -12,7 +12,7 @@ import { windowHeight, windowWidth } from "../../Dimensions";
 import FeedItem from "../components/FeedItem";
 import axios from "axios";
 import { clearStorage, getUserID, getToken } from "../../AsyncStorageHandles";
-const baseUrl = "http://192.168.0.84:8000";
+const baseUrl = "http://192.168.0.174:8000";
 const baseUrlAlternate = "http://10.100.102.12:8000";
 
 const Feed = (props) => {
@@ -25,10 +25,11 @@ const Feed = (props) => {
     return await getToken();
   };
 
-  useEffect(() => {
-    tokenize().then((token) => {
+  useEffect(async () => {
+    console.log("USER ID: ", await getUserID());
+    tokenize().then(async (token) => {
       axios
-        .get(`${baseUrl}/users/${getUserID()}/bids`, {
+        .get(`${baseUrl}/users/${await getUserID()}/bids`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

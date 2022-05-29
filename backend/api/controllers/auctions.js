@@ -130,7 +130,6 @@ module.exports = {
           });
         }
         const bidID = await setABid(req, res);
-        console.log("bkaaaaa", bidID);
         Bid.findById(bidID).then((bid) => {
           Bid.findById(auction.bids[auction.bids.length - 1]).then(
             (currentBid) => {
@@ -195,5 +194,50 @@ module.exports = {
       .catch((err) => {
         res.status(500).json({ err });
       });
+  },
+  payment: (req, res) => {
+    const auctionID = req.params.auctionID;
+    let bidAmount;
+    console.log(auctionID);
+    Auction.findById(auctionID).then((auction) => {
+      if (!auction) {
+        return res.status(404).json({
+          message: "Auction not found",
+        });
+      }
+      const bidID = auction.bids[auction.bids.length - 1];
+      Bid.findById(bidID).then((bid) => {
+        if (!bid) {
+          return res.status(404).json({
+            message: "Bid not found",
+          });
+        }
+        console.log("THIS IS BID: ", bid);
+        if (bid.expired) {
+          console.log("HERE EXPIRED");
+          res.status(500).json({
+            message: `The auction - '${auction.title}' already been sold.`,
+          });
+        } else {
+          console.log("continue");
+          bidAmount = bid.amount;
+          bid.expired = true;
+          bid.save();
+          const sellerID = auction.user;
+          User.findById(sellerID).then((seller) => {
+            if (!seller) {
+              return res.status(404).json({
+                message: "Seller not found",
+              });
+            }
+            seller.coins += bidAmount;
+            seller.save();
+            res.status(200).json({
+              message: `The auction - '${auction.title}' has been expired and the product sold. Now you got ${seller.coins}`,
+            });
+          });
+        }
+      });
+    });
   },
 };

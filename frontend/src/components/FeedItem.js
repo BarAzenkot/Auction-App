@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import axios from "axios";
 import Btn from "../components/Btn";
 import { windowHeight } from "../../Dimensions";
-const baseUrl = "http://192.168.0.84:8000";
+const baseUrl = "http://192.168.0.174:8000";
 const baseUrlAlternate = "http://10.100.102.12:8000";
 
 const FeedItem = (props) => {
@@ -37,23 +37,21 @@ const FeedItem = (props) => {
   //     });
   // };
   useEffect(() => {
-    const callApi = () => {
-      if (props.image) {
-        const result = axios
-          .get(`${baseUrl}/image/${props.image}`)
-          .then((response) => {
-            setImg({ uri: response.config.url });
-            // console.log(img);
-            setLoad(true);
-          })
-          .catch((error) => {
-            setLoad(true);
-            response.status(500).json({ err });
-          });
-      }
-    };
+    console.log("INSIDE OF FeedItem UseEffect.");
 
-    callApi();
+    if (props.image) {
+      const result = axios
+        .get(`${baseUrl}/image/${props.image}`)
+        .then((response) => {
+          setImg({ uri: response.config.url });
+          setLoad(true);
+        })
+        .catch((error) => {
+          setLoad(true);
+          response.status(500).json({ err });
+        });
+    }
+    console.log("THIS IS IMAGE: ", img);
   }, []);
   // console.log(Item);
   // console.log(props.image);

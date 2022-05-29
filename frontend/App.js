@@ -8,6 +8,7 @@ import RegisterScreen from "./src/screens/RegisterScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { getToken, getUserID } from "./AsyncStorageHandles";
+import AddAuction from "./src/screens/AddAuction";
 
 const AppStack = createNativeStackNavigator();
 
@@ -30,6 +31,7 @@ export default function App() {
   }, [readToken]);
 
   if (token) {
+    // return <AddAuction />;
     return (
       <NavigationContainer style={styles.container}>
         <AppStack.Navigator initialRouteName="Feed">

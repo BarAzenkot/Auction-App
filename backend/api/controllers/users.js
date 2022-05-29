@@ -85,6 +85,8 @@ module.exports = {
   },
   getOneUser: (req, res) => {
     const userID = req.params.userID;
+    console.log("User ID: ", userID);
+    console.log("HERE IN getOneUser()");
 
     User.findById(userID)
       .then((user) => {

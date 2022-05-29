@@ -10,6 +10,7 @@ module.exports = {
 
     const bid = new Bid({
       _id: new mongoose.Types.ObjectId(),
+      expired: false,
       amount,
       auction: auctionID,
       user: userID,

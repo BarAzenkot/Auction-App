@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import AuthInput from "../components/AuthInput";
 import Btn from "../components/Btn";
 const axios = require("axios");
-const baseUrl = "http://192.168.0.84:8000";
+const baseUrl = "http://192.168.0.174:8000";
 const baseUrlAlternate = "http://10.100.102.12:8000";
 import { getToken, getUserID } from "../../AsyncStorageHandles";
 
@@ -20,6 +20,7 @@ const Bid = (props) => {
   useEffect(() => {
     tokenize()
       .then((token) => {
+        // console.log("HERE IN Bid.js and this is the user: ", props.user);
         axios
           .get(`${baseUrl}/users/${props.user}`, {
             headers: {
