@@ -205,6 +205,11 @@ module.exports = {
           message: "Auction not found",
         });
       }
+      if (auction.endDate > Date.now()) {
+        return res.status(100).json({
+          message: "Auction still on air",
+        });
+      }
       const bidID = auction.bids[auction.bids.length - 1];
       Bid.findById(bidID).then((bid) => {
         if (!bid) {
@@ -212,9 +217,7 @@ module.exports = {
             message: "Bid not found",
           });
         }
-        console.log("THIS IS BID: ", bid);
         if (bid.expired) {
-          console.log("HERE EXPIRED");
           res.status(500).json({
             message: `The auction - '${auction.title}' already been sold.`,
           });

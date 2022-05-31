@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import AuthInput from "../components/AuthInput";
 import Btn from "../components/Btn";
 const axios = require("axios");
-const baseUrl = "http://192.168.0.174:8000";
+const baseUrl = "http://192.168.1.67:8000";
 const baseUrlAlternate = "http://10.100.102.12:8000";
 import { getToken } from "../../AsyncStorageHandles";
 

@@ -31,24 +31,24 @@ export default function App() {
   }, [readToken]);
 
   if (token) {
-    // return <AddAuction />;
-    return (
-      <NavigationContainer style={styles.container}>
-        <AppStack.Navigator initialRouteName="Feed">
-          <AppStack.Screen
-            name="Feed"
-            component={Feed}
-            initialParams={{
-              reReadToken: reReadToken,
-              signedInUser: signedInUser,
-            }}
-          />
-          <AppStack.Screen name="Auction" component={Auction} />
+    return <AddAuction />;
+    // return (
+    //   <NavigationContainer style={styles.container}>
+    //     <AppStack.Navigator initialRouteName="Feed">
+    //       <AppStack.Screen
+    //         name="Feed"
+    //         component={Feed}
+    //         initialParams={{
+    //           reReadToken: reReadToken,
+    //           signedInUser: signedInUser,
+    //         }}
+    //       />
+    //       <AppStack.Screen name="Auction" component={Auction} />
 
-          {console.log(signedInUser)}
-        </AppStack.Navigator>
-      </NavigationContainer>
-    );
+    //       {console.log(signedInUser)}
+    //     </AppStack.Navigator>
+    //   </NavigationContainer>
+    // );
   }
   return (
     <NavigationContainer style={styles.container}>

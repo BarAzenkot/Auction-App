@@ -95,7 +95,7 @@ module.exports = {
             message: "User not found",
           });
         }
-        res.status(200).json({
+        return res.status(200).json({
           user,
         });
       })
@@ -192,11 +192,14 @@ module.exports = {
               User.findById(userID).then((user) => {
                 user.coins += bid.amount;
                 user.save();
-                res.status(200).json({
+                return res.status(200).json({
                   userID,
                 });
               });
             }
+            return res.status(100).json({
+              message: "No refund required.",
+            });
           });
         }
       })

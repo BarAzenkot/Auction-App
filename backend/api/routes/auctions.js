@@ -25,6 +25,6 @@ router.post("/:auctionID", checkAuth, offerABid);
 // router.post("/shadow/:auctionID", checkAuth, offerAShadowBid);
 router.get("/categories/:categoryID", checkAuth, getByCategory);
 router.delete("/", deleteAllAuctions);
-router.patch("/:auctionID/payment", checkAuth, payment);
+router.get("/:auctionID/payment", checkAuth, payment);
 
 module.exports = router;

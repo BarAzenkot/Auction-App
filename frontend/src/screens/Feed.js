@@ -12,7 +12,7 @@ import { windowHeight, windowWidth } from "../../Dimensions";
 import FeedItem from "../components/FeedItem";
 import axios from "axios";
 import { clearStorage, getUserID, getToken } from "../../AsyncStorageHandles";
-const baseUrl = "http://192.168.0.174:8000";
+const baseUrl = "http://192.168.1.67:8000";
 const baseUrlAlternate = "http://10.100.102.12:8000";
 
 const Feed = (props) => {
@@ -26,16 +26,51 @@ const Feed = (props) => {
   };
 
   useEffect(async () => {
-    console.log("USER ID: ", await getUserID());
+    console.log(new Date());
+    const userID = await getUserID();
     tokenize().then(async (token) => {
       axios
-        .get(`${baseUrl}/users/${await getUserID()}/bids`, {
+        .get(`${baseUrl}/users/${userID}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          const userAuctions = res.data.user.auctions;
+          if (userAuctions.length === 0) {
+            console.log("NO AUCTIONS HAVE FOUND");
+          } else {
+            userAuctions.map((auction) => {
+              axios
+                .get(`${baseUrl}/auctions/${auction}/payment`, {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                })
+                .then((resp) =>
+                  console.log(
+                    "111111111111111111111111111111111111111111111111111111111",
+                    resp
+                  )
+                )
+                .catch((err) => console.log(err));
+            });
+
+            console.log(
+              `${res.data.user.fullName}'s Auctions: ${userAuctions}`
+            );
+          }
+        });
+      //==================================================
+      axios
+        .get(`${baseUrl}/users/${userID}/bids`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         })
         .then(function (response) {
           const userBids = response.data.bids;
+          console.log(`Bids: ${userBids}`);
           userBids.map((bid) => {
             axios
               .get(`${baseUrl}/users/${bid}/auction`, {
