@@ -14,30 +14,41 @@ const TimeInput = (props) => {
     setDatePickerVisibility(false);
   };
 
-  const handleConfirmTime = (timeInput) => {
-    props.onChange(timeInput.toString().split(" ")[4].slice(0, 5));
-    hideDatePicker();
-  };
-
   const handleConfirmDate = (timeInput) => {
-    props.onChange(timeInput.toString().split(" ").slice(1, 4).toString());
+    let date = timeInput.toString().split(" ").slice(1, 4).toString();
+    let time = timeInput.toString().split(" ")[4].slice(0, 5);
+    props.onChange(date + " | " + time, timeInput);
+
     hideDatePicker();
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={{
+        ...styles.container,
+        borderColor: props.error ? "red" : "black",
+        backgroundColor: props.error ? "rgba(200, 150, 150, 0.7)" : "white",
+      }}
+    >
       <TouchableOpacity onPress={showDatePicker}>
         <Text
-          style={props.timer === "Choose Time" ? styles.input : styles.timer}
+          style={{
+            ...styles.input,
+            color: props.timer.includes("hoose")
+              ? `${props.error ? "white" : "grey"}`
+              : "black",
+          }}
         >
           {props.timer}
         </Text>
       </TouchableOpacity>
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
-        mode={props.clock ? "time" : "date"}
-        onConfirm={props.clock ? handleConfirmTime : handleConfirmDate}
+        // mode={props.clock ? "time" : "date"}
+        mode="datetime"
+        onConfirm={handleConfirmDate}
         onCancel={hideDatePicker}
+        // {...rest}
       />
     </View>
   );
@@ -45,32 +56,14 @@ const TimeInput = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 5,
-    marginBottom: 10,
-    width: "100%",
-    height: windowHeight / 15,
-    borderColor: "#ccc",
-    borderRadius: 3,
+    backgroundColor: "white",
+    margin: 8,
     borderWidth: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#fff",
-  },
-  timer: {
-    padding: 10,
-    flex: 1,
-    fontSize: 16,
-    color: "#333",
-    justifyContent: "center",
-    alignItems: "center",
+    borderRadius: 10,
   },
   input: {
-    padding: 10,
-    flex: 1,
-    fontSize: 16,
-    color: "#666",
-    justifyContent: "center",
-    alignItems: "center",
+    fontSize: 24,
+    margin: 10,
   },
 });
 

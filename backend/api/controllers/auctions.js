@@ -24,10 +24,12 @@ module.exports = {
   },
   createNewAuction: async (req, res) => {
     // res.json({ file: req.files });
-    const images = req.files.map((file) => file.filename);
+    console.log("INSIDE createNewAuction(): ", req.body);
+
+    const images = req.body.body.images;
     const { title, description, startDate, endDate, startPrice, category } =
-      req.body;
-    const userID = req.user.id;
+      req.body.body;
+    const userID = req.body.user.id;
 
     const auction = new Auction({
       _id: new mongoose.Types.ObjectId(),
@@ -40,7 +42,7 @@ module.exports = {
       images,
       user: userID,
     });
-
+    console.log("AFTER Auction creation: ", auction);
     User.findById(userID).then((user) => {
       if (!user) {
         return res.status(404).json({
@@ -50,6 +52,7 @@ module.exports = {
       user.auctions.push(auction);
       user.save();
     });
+    console.log("AFTER PUSH AUCTION TO THE USER");
 
     auction
       .save()

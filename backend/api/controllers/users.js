@@ -123,7 +123,7 @@ module.exports = {
   },
   chargeCoins: (req, res) => {
     const userID = req.params.userID;
-    const coins = req.body.coins;
+    const coins = req.body.body.amount;
 
     User.findById(userID)
       .then((user) => {
@@ -163,18 +163,23 @@ module.exports = {
       });
   },
   getUserBids: (req, res) => {
-    console.log("HEREEEEEEEEEEEEEEEEEEEEEEEEEEEE1");
-
-    const userID = req.user.id;
+    const userID = req.params.userID;
     User.findById(userID)
       .then((user) => {
         const bids = user.bids;
         return res.status(200).json({ bids });
       })
-      .catch((err) => {
-        console.log(err);
-        res.status(500).json({ err });
-      });
+      .catch((err) => console.log(err.message));
+  },
+  getUserAuctions: (req, res) => {
+    const userID = req.params.userID;
+    User.findById(userID)
+      .then((user) => {
+        console.log(user);
+        const auctions = user.auctions;
+        return res.status(200).json({ auctions });
+      })
+      .catch((err) => console.log(err.message));
   },
   updateCoins: (req, res) => {
     const auctionID = req.params.auctionID;

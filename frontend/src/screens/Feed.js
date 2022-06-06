@@ -12,7 +12,7 @@ import { windowHeight, windowWidth } from "../../Dimensions";
 import FeedItem from "../components/FeedItem";
 import axios from "axios";
 import { clearStorage, getUserID, getToken } from "../../AsyncStorageHandles";
-const baseUrl = "http://192.168.1.67:8000";
+const baseUrl = "http://192.168.31.95:8000";
 const baseUrlAlternate = "http://10.100.102.12:8000";
 
 const Feed = (props) => {
@@ -136,9 +136,10 @@ const Feed = (props) => {
 
   useEffect(() => {
     const callApi = () => {
-      const result = axios
-        .get(`${baseUrl}/auctions/`)
-        .then((response) => setFeedItems(response.data.auctions));
+      const result = axios.get(`${baseUrl}/auctions/`).then((response) => {
+        console.log("2345678op;");
+        setFeedItems(response.data.auctions);
+      });
     };
     callApi();
   }, [`${baseUrl}/auctions`]);
@@ -202,7 +203,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     position: "absolute",
-    top: windowHeight - 180,
+    top: windowHeight - 250,
     left: windowWidth / 2 - 32,
   },
 });

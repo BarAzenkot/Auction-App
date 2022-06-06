@@ -17,7 +17,7 @@ const {
 } = require("../controllers/auctions");
 
 router.get("/", /*checkAuth,*/ getAllAuctions);
-router.post("/", checkAuth, upload.array("images", 8), createNewAuction);
+router.post("/", /*checkAuth,*/ upload.array("images", 8), createNewAuction);
 router.patch("/:auctionID", checkAuth, updateAuction);
 router.delete("/:auctionID", checkAuth, deleteAuction);
 router.get("/:auctionID", /*checkAuth,*/ getOneAuction);
