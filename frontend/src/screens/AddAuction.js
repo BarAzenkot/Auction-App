@@ -150,91 +150,94 @@ const AddAuction = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <AuthInput
-        placeholder="Title"
-        placeholderTextColor={titleValid ? "grey" : "white"}
-        returnKeyType="done"
-        onChangeText={(input) => setTitle(input)}
-        error={!titleValid}
-      />
-      <AuthInput
-        placeholder="Category"
-        placeholderTextColor={categoryValid ? "grey" : "white"}
-        returnKeyType="done"
-        onChangeText={(input) => setCategory(input)}
-        error={!categoryValid}
-      />
-      <AuthInput
-        placeholder="Description"
-        placeholderTextColor={descriptionValid ? "grey" : "white"}
-        returnKeyType="done"
-        onChangeText={(input) => setDescription(input)}
-        error={!descriptionValid}
-      />
-      <AuthInput
-        placeholder="Start Price ($)"
-        placeholderTextColor={startPriceValid ? "grey" : "white"}
-        returnKeyType="done"
-        keyboardType="number-pad"
-        onChangeText={(input) => setStartPrice(parseInt(input))}
-        error={!startPriceValid}
-      />
-      <TimeInput
-        timer={startDate}
-        onChange={(input, date) => {
-          setStartDate(input);
-          setActualStartDate(new Date(date));
-        }}
-        placeholderTextColor={startDateValid ? "grey" : "white"}
-        error={!startDateValid}
-      />
-      {/* <TimeInput
+    <View style={styles.maincontainer}>
+      <Text style={styles.title}>List Your Item Here!</Text>
+      <View style={styles.container}>
+        <AuthInput
+          placeholder="Title"
+          placeholderTextColor={titleValid ? "grey" : "white"}
+          returnKeyType="done"
+          onChangeText={(input) => setTitle(input)}
+          error={!titleValid}
+        />
+        <AuthInput
+          placeholder="Category"
+          placeholderTextColor={categoryValid ? "grey" : "white"}
+          returnKeyType="done"
+          onChangeText={(input) => setCategory(input)}
+          error={!categoryValid}
+        />
+        <AuthInput
+          placeholder="Description"
+          placeholderTextColor={descriptionValid ? "grey" : "white"}
+          returnKeyType="done"
+          onChangeText={(input) => setDescription(input)}
+          error={!descriptionValid}
+        />
+        <AuthInput
+          placeholder="Start Price ($)"
+          placeholderTextColor={startPriceValid ? "grey" : "white"}
+          returnKeyType="done"
+          keyboardType="number-pad"
+          onChangeText={(input) => setStartPrice(parseInt(input))}
+          error={!startPriceValid}
+        />
+        <TimeInput
+          timer={startDate}
+          onChange={(input, date) => {
+            setStartDate(input);
+            setActualStartDate(new Date(date));
+          }}
+          placeholderTextColor={startDateValid ? "grey" : "white"}
+          error={!startDateValid}
+        />
+        {/* <TimeInput
         clock
         timer={startTime}
         onChange={(input) => setStartTime(input)}
       /> */}
-      <TimeInput
-        timer={endDate}
-        onChange={(input, date) => {
-          setEndDate(input);
-          setActualEndDate(new Date(date));
-        }}
-        placeholderTextColor={endDateValid ? "grey" : "white"}
-        error={!endDateValid}
-      />
-      {/* <TimeInput
+        <TimeInput
+          timer={endDate}
+          onChange={(input, date) => {
+            setEndDate(input);
+            setActualEndDate(new Date(date));
+          }}
+          placeholderTextColor={endDateValid ? "grey" : "white"}
+          error={!endDateValid}
+        />
+        {/* <TimeInput
         clock
         timer={endTime}
         onChange={(input) => setEndTime(input)}
       /> */}
-      {(hasGalleryPermission === false || hasGalleryPermission === false) && (
-        <Text>No access to gallery</Text>
-      )}
-      <TouchableOpacity style={styles.imgSelect} onPress={() => pickImage()}>
-        {true && (
-          <View style={styles.wrapper}>
-            <Text
-              style={{
-                ...styles.text,
-                color: imgs.length === 0 ? "grey" : "rgb(100, 220, 100)",
-              }}
-            >
-              {imgs.length === 0 ? "Select Main Image" : "Choose Another"}
-            </Text>
-            <Image source={imgIcon} />
-          </View>
+        {(hasGalleryPermission === false || hasGalleryPermission === false) && (
+          <Text>No access to gallery</Text>
         )}
-      </TouchableOpacity>
-      <Btn title="Submit" onPress={onSubmit}></Btn>
+        <TouchableOpacity style={styles.imgSelect} onPress={() => pickImage()}>
+          {true && (
+            <View style={styles.wrapper}>
+              <Text
+                style={{
+                  ...styles.text,
+                  color: imgs.length === 0 ? "grey" : "rgb(100, 220, 100)",
+                }}
+              >
+                {imgs.length === 0 ? "Select Main Image" : "Choose Another"}
+              </Text>
+              <Image source={imgIcon} />
+            </View>
+          )}
+        </TouchableOpacity>
+        <Btn title="Submit" onPress={onSubmit}></Btn>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: windowHeight * 0.2,
-    marginLeft: windowWidth * 0.1,
+    marginTop: windowHeight * 0.05,
+    // marginLeft: windowWidth * 0.1,
     backgroundColor: "grey",
     borderWidth: 1,
     borderRadius: 10,
@@ -257,6 +260,13 @@ const styles = StyleSheet.create({
   wrapper: {
     alignItems: "center",
     flexDirection: "row",
+  },
+  title: {
+    fontSize: 26,
+  },
+  maincontainer: {
+    marginTop: windowHeight * 0.1,
+    alignItems: "center",
   },
 });
 

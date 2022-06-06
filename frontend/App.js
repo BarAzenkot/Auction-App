@@ -73,6 +73,19 @@ export default function App() {
             }}
           />
           <AppTab.Screen
+            name="List An Item"
+            component={AddAuction}
+            options={{
+              tabBarIcon: ({ color, size }) => (
+                <MaterialCommunityIcons
+                  name="plus-box-outline"
+                  color={color}
+                  size={23}
+                />
+              ),
+            }}
+          />
+          <AppTab.Screen
             name="My Auctions"
             component={MyAuctions}
             initialParams={{ signedInUser: signedInUser }}

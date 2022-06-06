@@ -20,6 +20,7 @@ const Feed = (props) => {
   const [data, setData] = useState([]);
   const [totalFetch, setTotalFetch] = useState(2);
   const [img, setImg] = useState(require("../../assets/down-chevron.png"));
+  const [logout, setLogout] = useState(require("../../assets/logout.png"));
   const flatList = useRef();
   const tokenize = async () => {
     return await getToken();
@@ -123,7 +124,7 @@ const Feed = (props) => {
           props.route.params.reReadToken();
         }}
       >
-        <Text>Log Out</Text>
+        <Image source={logout} />
       </TouchableOpacity>
     ),
   });
